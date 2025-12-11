@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="long-text" style="flex-grow: 1; padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px;">
+        <ui:Label name="long-text__label" style="color: rgb(255, 255, 255); font-size: 45px; white-space: normal;" />
+    </ui:VisualElement>
+</ui:UXML>

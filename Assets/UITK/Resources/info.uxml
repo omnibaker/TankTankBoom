@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="info" style="flex-grow: 1;">
+        <ui:VisualElement name="info-body" style="flex-grow: 1; background-color: rgb(102, 102, 102); flex-direction: row;">
+            <ui:VisualElement name="info-background" style="position: absolute; width: 100%; height: 100%; background-image: url(&quot;project://database/Assets/Images/Backgrounds/faded_black.png?fileID=2800000&amp;guid=50c66a2f7bc84a44cbca878f8371ec60&amp;type=3#faded_black&quot;); -unity-background-scale-mode: stretch-to-fill; -unity-background-image-tint-color: rgb(157, 0, 0);" />
+            <ui:VisualElement name="info-topics" style="flex-grow: 0; width: 320px; justify-content: flex-start; align-content: auto; border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-right-width: 4px; background-color: rgb(4, 4, 4); padding-top: 64px; flex-shrink: 0;" />
+            <ui:VisualElement name="info-topic__container" style="flex-grow: 1; background-image: none; -unity-background-scale-mode: stretch-to-fill; padding-top: 64px;">
+                <ui:Label text="TITLE" name="info-topic__label" style="height: 128px; -unity-text-align: lower-left; color: rgb(255, 255, 255); font-size: 64px; -unity-font-style: normal; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 30px; padding-top: 0; padding-right: 0; padding-bottom: 32px; padding-left: 0; -unity-font-definition: url(&quot;project://database/Assets/Fonts/SairaStencilOne-Regular.ttf?fileID=12800000&amp;guid=0be4e80be4ec41945acfda6486ce26d6&amp;type=3#SairaStencilOne-Regular&quot;);" />
+                <ui:VisualElement name="info-topic__content" style="flex-grow: 1; -unity-font-definition: url(&quot;project://database/Assets/Fonts/ShareTech-Regular.ttf?fileID=12800000&amp;guid=08eddce34c4bbeb4e884933babee639f&amp;type=3#ShareTech-Regular&quot;);">
+                    <ui:ScrollView name="info-topic__content-scroll" style="flex-grow: 0; margin-top: 5px; margin-right: 5px; margin-left: 5px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

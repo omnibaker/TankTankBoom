@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UITK/Testing/xxx.uss?fileID=7433441132597879392&amp;guid=253a9cc40e92f5e48bf8a662819049ef&amp;type=3#xxx" />
+    <Style src="project://database/Assets/_SUMFULLA/UITK/Resources/tanktankboom.uss?fileID=7433441132597879392&amp;guid=16f46a74f8a69104785196dd31e966cc&amp;type=3#tanktankboom" />
+    <ui:Label text="Label" name="Label" class="popup__option-button__label" />
+</ui:UXML>

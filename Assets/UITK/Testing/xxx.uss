@@ -1,0 +1,6 @@
+:root {
+}
+
+.abc {
+    -unity-font-definition: url("project://database/Assets/Font/ShareTech-Regular.ttf?fileID=12800000&guid=08eddce34c4bbeb4e884933babee639f&type=3#ShareTech-Regular");
+}

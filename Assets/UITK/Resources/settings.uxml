@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_SUMFULLA/UITK/Resources/tanktankboom.uss?fileID=7433441132597879392&amp;guid=16f46a74f8a69104785196dd31e966cc&amp;type=3#tanktankboom" />
+    <ui:VisualElement name="settings-container" style="flex-grow: 1; padding-top: 10px; padding-right: 20px; padding-bottom: 10px; padding-left: 20px; max-width: 1200px;" />
+</ui:UXML>
