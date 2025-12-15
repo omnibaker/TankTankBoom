@@ -7,7 +7,7 @@ You control the trajectory of artillery fire against a rival tank. First to dest
 The terrain is generated randomly from various procedural methods. They are rendered using Unity's TileMap system to create a block grid of tile elements which can be destroyed. The UI is created with UIToolkit using various bindings, templates and custom elements.
 
 <img width="400" height="185" alt="ttb_1" src="https://github.com/user-attachments/assets/1a93bb00-7db4-4efc-86e4-3fa655693673" background-color=#F00>
-<br>
+
 <img width="400" height="185" alt="ttb_11" src="https://github.com/user-attachments/assets/d37db351-84b6-484b-9870-74aef32a283b" />
 
 <img width="400" height="185" alt="ttb_10" src="https://github.com/user-attachments/assets/eb549a00-a839-40d7-a0e5-0925a6ca3c74" />
