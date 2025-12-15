@@ -4,9 +4,9 @@ Unity artillery game based on classics like *Scorched Earth* and *Death Tank*. I
 
 You control the trajectory of artillery fire against a rival tank. First to destory the other wins the battle. You will also have to fight off bomb-dropping blimps and berserker car bombers.
 
-The terrain is generated randomly from various procedural methods. They are rendered using Unity's TileMap system to create a block grid of tile elements which can be destroyed. The UI is created with UIToolkit using various bindings, templates and custom elements.
+The terrain is generated randomly from various procedural methods. They are rendered using Unity's Tilemap system to create a block grid of tile elements which can be destroyed. The UI is created with UIToolkit using various bindings, templates and custom elements.
 
-<img width="400" height="185" alt="ttb_1" src="https://github.com/user-attachments/assets/1a93bb00-7db4-4efc-86e4-3fa655693673" background-color=#F00>
+<img width="400" height="185" alt="ttb_1" src="https://github.com/user-attachments/assets/1a93bb00-7db4-4efc-86e4-3fa655693673">
 
 <img width="400" height="185" alt="ttb_11" src="https://github.com/user-attachments/assets/d37db351-84b6-484b-9870-74aef32a283b" />
 
@@ -30,7 +30,7 @@ The terrain is generated randomly from various procedural methods. They are rend
 - While holding, an accuracy bar will appear and oscillate from left to right, indicating the accuracy offset - aim for the middle and release.
 - Note the wind factor as you will need to adjust your accuracy to adapt to what way the wind is blowing.
 
-Still a work in progress, however the core game is there. Audio set up but need to add sound effect asset. A few other loose ends to tie up but the dmeo is more of an example of a game with bootstrapper, menus, settings, full gameplay, consistent code, UI implementation,  and well-structured file manangement.
+Still a work in progress, however the core game is there. Audio set up but need to add sound FX assets. A few other loose ends to tie up but the demo is more of an example of a game with bootstrapper, menus, settings, full gameplay, consistent code, UI implementation, and well-structured file manangement.
 
 Simple C# with standard `UnityEngine` library. Works with native Unity 6.2. Feel free to use.
 
