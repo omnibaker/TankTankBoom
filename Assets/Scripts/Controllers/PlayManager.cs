@@ -205,6 +205,10 @@ namespace Sumfulla.TankTankBoom
 
                 // Start new wave
                 Progress.NextBattle();
+                if(TryGetComponent(out SkyUpdater su))
+                {
+                    su.UpdateSky();
+                }
                 StartCoroutine(StartNewBattle());
             }, "OK");
 
