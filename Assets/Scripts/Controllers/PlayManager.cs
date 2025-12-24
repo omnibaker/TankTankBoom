@@ -136,6 +136,11 @@ namespace Sumfulla.TankTankBoom
             UIPlay.DisplayGaugeChildren(false);
 
             // Create environment
+            SkyUpdater su = FindAnyObjectByType<SkyUpdater>();
+            if(su != null)
+            {
+                su.UpdateSky();
+            }
             GameRef.Environment.GenerateNewWind();
             yield return new WaitForSeconds(0.1f);
             _terrainController.CreateNewBattlefieldTerrain();
@@ -205,10 +210,6 @@ namespace Sumfulla.TankTankBoom
 
                 // Start new wave
                 Progress.NextBattle();
-                if(TryGetComponent(out SkyUpdater su))
-                {
-                    su.UpdateSky();
-                }
                 StartCoroutine(StartNewBattle());
             }, "OK");
 
@@ -270,6 +271,7 @@ namespace Sumfulla.TankTankBoom
             {
                 // Start new wave
                 //GameLog.Warn("TODO[PlayManager]: Go to main menu");
+                SceneController.I.GoToScene(GameRef.Scenes.MENU);
             }, "GOD, NO");
         }
 
