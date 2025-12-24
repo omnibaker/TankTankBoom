@@ -269,8 +269,7 @@ namespace Sumfulla.TankTankBoom
             // Decline button
             pu.AddButton(() =>
             {
-                // Start new wave
-                //GameLog.Warn("TODO[PlayManager]: Go to main menu");
+                // Exit to main menu
                 SceneController.I.GoToScene(GameRef.Scenes.MENU);
             }, "GOD, NO");
         }
@@ -341,8 +340,8 @@ namespace Sumfulla.TankTankBoom
             // Decline button
             pu.AddButton(() =>
             {
-                // Start new wave
-                //GameLog.Warn("TODO[PlayManager]: Go to main menu");
+                // Exit to main menu
+                SceneController.I.GoToScene(GameRef.Scenes.MENU);
             }, "GOD NO");
 
         }
