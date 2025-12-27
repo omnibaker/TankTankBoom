@@ -1295,7 +1295,7 @@ MonoBehaviour:
   _terrainController: {fileID: 315606266}
   AirSupport: {fileID: 1189208569}
   _clouds: {fileID: 64578535}
-  GodMode: 1
+  GodMode: 0
 --- !u!114 &1189208569
 MonoBehaviour:
   m_ObjectHideFlags: 0
