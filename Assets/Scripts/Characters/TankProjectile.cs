@@ -11,6 +11,7 @@ namespace Sumfulla.TankTankBoom
         private Rigidbody2D _rb;
         private Coroutine _countdownToExplode;
         private Vector3 _velocityWhenPaused;
+        private bool _triggered;
 
         private void Update()
         {
@@ -46,18 +47,35 @@ namespace Sumfulla.TankTankBoom
             {
                 if (collider.TryGetComponent(out IExplodableEnemy explodable))
                 {
-                    explodable.InflictDamage();
+                    if(!_triggered)
+                    {
+                        explodable.InflictDamage();
+                        PlayManager.I.CameraShake();
+                        _triggered = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Has already been triggered!");
+                    }
+
                 }
-                PlayManager.I.CameraShake();
             }
             // Hits player
             else if (collider.CompareTag(TagNames.PlayerTank.ToString()))
             {
                 if (collider.TryGetComponent(out TankPlayer tp))
                 {
-                    tp.InflictDamage();
+                    if(!_triggered)
+                    {
+                        tp.InflictDamage();
+                        PlayManager.I.CameraShake();
+                        _triggered = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Has already been triggered!");
+                    }
                 }
-                PlayManager.I.CameraShake();
             }
 
             Explode();
