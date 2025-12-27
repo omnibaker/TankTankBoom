@@ -1049,7 +1049,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741536918}
   m_Enabled: 1
-  m_CellSize: {x: 0.08, y: 0.08, z: 0.08}
+  m_CellSize: {x: 0.04, y: 0.04, z: 0.04}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
@@ -1295,7 +1295,7 @@ MonoBehaviour:
   _terrainController: {fileID: 315606266}
   AirSupport: {fileID: 1189208569}
   _clouds: {fileID: 64578535}
-  GodMode: 0
+  GodMode: 1
 --- !u!114 &1189208569
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,11 +8,11 @@ namespace Sumfulla.TankTankBoom
 
     public class TerrainController : MonoBehaviour
     {
-        public const int GUAGE_MAX_LENGTH = 100;
-        public const int BUTTON_MAX_LENGTH_PLUS_BLEED = 250;
-        public const int BOTTOM_UI_HEIGHT = 60;
-        private const int DEF_RADIUS = 2;
-        private const int BATTLEFIELD_WIDTH = 200;
+        public const int GUAGE_MAX_LENGTH = 200;
+        public const int BUTTON_MAX_LENGTH_PLUS_BLEED = 500;
+        public const int BOTTOM_UI_HEIGHT = 120;
+        private const int DEF_RADIUS = 4;
+        private const int BATTLEFIELD_WIDTH = 400;
 
         [Header("CREATION VALUES")]
         [SerializeField] private int _interval = 3;
@@ -164,7 +164,7 @@ namespace Sumfulla.TankTankBoom
             float distanceBetweenTanks = _platforms.Enemy.x - _platforms.Player.x;
             float ratio = (float)Screen.width / Screen.height;
             float revRatio = 1f / ratio;
-            Camera.main.orthographicSize = (int)(revRatio * distanceBetweenTanks / 15f); 
+            Camera.main.orthographicSize = (int)(revRatio * distanceBetweenTanks / 30f); 
         }
 
         /// <summary>

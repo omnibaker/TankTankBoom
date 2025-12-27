@@ -11,13 +11,13 @@ namespace Sumfulla.TankTankBoom
         enum GenPhase { START_FLAT, PRE_PLAYER, PLAYER, NO_MANS_LAND, ENEMY, POST_ENEMY, END_FLAT }
         private const int UB_X = 0;
         private const int UB_Y = 1;
-        private const int TERRAIN_START = 50;
-        private const int PLAYER_PLATFORM_LENGTH = 30;
-        private const int ENEMY_PLATFORM_LENGTH = 20;
-        private const float VERTICAL_WIGGLE_ROOM = 5f;
-        private const float SLOPE_BOTTOM_PERCENTAGE = 10f;
-        private const int FLAT_HEIGHT = 3;
-        public const float MIN_HEIGHT_FACTOR = 7f; //8.5f;
+        private const int TERRAIN_START = 100;
+        private const int PLAYER_PLATFORM_LENGTH = 60;
+        private const int ENEMY_PLATFORM_LENGTH = 40;
+        private const float VERTICAL_WIGGLE_ROOM = 10f;
+        private const float SLOPE_BOTTOM_PERCENTAGE = 20f;
+        private const int FLAT_HEIGHT = 6;
+        public const float MIN_HEIGHT_FACTOR = 14f; //8.5f;
         public static PlatformPositions Platform;
         private static int _platformY = 0;
 
@@ -212,7 +212,7 @@ namespace Sumfulla.TankTankBoom
             List<int> noiseY = new List<int>();
 
             //int MakeHeight(int x) => Mathf.FloorToInt(Mathf.PerlinNoise(x, seed * reduction) * upperY);
-            float fullSectionAtBottom = 30 * 0.01f * upperY;
+            float fullSectionAtBottom = 60 * 0.01f * upperY;
             int MakeHeight(int x) => GetPerlinNoiseClampedHeight(x, seed, reduction, fullSectionAtBottom);
             int MakeRandomInterval() => rand.Next(3, 15);
 
