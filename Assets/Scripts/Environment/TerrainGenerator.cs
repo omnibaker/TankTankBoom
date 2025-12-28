@@ -12,6 +12,7 @@ namespace Sumfulla.TankTankBoom
         private const int UB_X = 0;
         private const int UB_Y = 1;
         private const int TERRAIN_START = 100;
+        private const int TERRAIN_END = 300;
         private const int PLAYER_PLATFORM_LENGTH = 60;
         private const int ENEMY_PLATFORM_LENGTH = 40;
         private const float VERTICAL_WIGGLE_ROOM = 10f;
@@ -86,7 +87,7 @@ namespace Sumfulla.TankTankBoom
             int pos_noMansLand = pos_player + PLAYER_PLATFORM_LENGTH;
             int pos_enemy = upperX - ENEMY_PLATFORM_LENGTH - TerrainController.BUTTON_MAX_LENGTH_PLUS_BLEED;
             int pos_postEnemy = pos_enemy + ENEMY_PLATFORM_LENGTH;
-            int pos_endFlat = pos_postEnemy + TERRAIN_START;
+            int pos_endFlat = pos_postEnemy + TERRAIN_END;
             int minTankLevel = GetMinimumTankLevel(upperY);
 
             // Next column variables
@@ -197,7 +198,7 @@ namespace Sumfulla.TankTankBoom
             int pos_noMansLand = pos_player + PLAYER_PLATFORM_LENGTH;
             int pos_enemy = upperX - ENEMY_PLATFORM_LENGTH - TerrainController.BUTTON_MAX_LENGTH_PLUS_BLEED;
             int pos_postEnemy = pos_enemy + ENEMY_PLATFORM_LENGTH;
-            int pos_endFlat = pos_postEnemy + TERRAIN_START;
+            int pos_endFlat = pos_postEnemy + TERRAIN_END;
             int minTankLevel = GetMinimumTankLevel(upperY);
 
             // Next column variables
@@ -367,7 +368,7 @@ namespace Sumfulla.TankTankBoom
             int pos_noMansLand = pos_player + PLAYER_PLATFORM_LENGTH;
             int pos_enemy = upperX - ENEMY_PLATFORM_LENGTH - TerrainController.BUTTON_MAX_LENGTH_PLUS_BLEED;
             int pos_postEnemy = pos_enemy + ENEMY_PLATFORM_LENGTH;
-            int pos_endFlat = pos_postEnemy + TERRAIN_START;
+            int pos_endFlat = pos_postEnemy + TERRAIN_END;
             int minTankLevel = GetMinimumTankLevel(upperY);
 
             // Next column variables

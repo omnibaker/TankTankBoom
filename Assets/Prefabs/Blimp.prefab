@@ -42,8 +42,8 @@ GameObject:
   - component: {fileID: 9209019000672747349}
   - component: {fileID: 7075747048049280994}
   - component: {fileID: 1164809532090382366}
-  - component: {fileID: 7327102641351180872}
   - component: {fileID: 9043821947448738670}
+  - component: {fileID: 3138111783129149239}
   m_Layer: 0
   m_Name: Blimp
   m_TagString: Enemy
@@ -115,7 +115,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: bc188c392f258bd4ab94c2a098aa3964, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6517889, g: 0.80883455, b: 0.9150943, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -139,8 +139,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Sumfulla.Tanked.ArtilleryBlimp
   _bombPF: {fileID: 8951190859140046579, guid: 3aa4cca86da62fd4bacc1f38ef981ac4, type: 3}
   _bombDropPoint: {fileID: 3982476568750007135}
---- !u!61 &7327102641351180872
-BoxCollider2D:
+--- !u!95 &9043821947448738670
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5444356852972771838}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cabb05234d61e9a42a210eafe0401a0d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!60 &3138111783129149239
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -173,7 +195,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.32}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -183,27 +205,27 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 0.64}
-  m_EdgeRadius: 0
---- !u!95 &9043821947448738670
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5444356852972771838}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cabb05234d61e9a42a210eafe0401a0d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.4029019, y: 0.40790817}
+      - {x: 0.44629505, y: 0.49470106}
+      - {x: 0.4483297, y: 0.5633313}
+      - {x: 0.40833896, y: 0.60333127}
+      - {x: 0.33000308, y: 0.5966626}
+      - {x: 0.26334667, y: 0.52999073}
+      - {x: 0.07166719, y: 0.5833251}
+      - {x: -0.26666564, y: 0.58832973}
+      - {x: -0.45, y: 0.53999996}
+      - {x: -0.53666264, y: 0.48499843}
+      - {x: -0.59499544, y: 0.40499845}
+      - {x: -0.5999969, y: 0.31832665}
+      - {x: -0.55165476, y: 0.24832663}
+      - {x: -0.45999998, y: 0.1766718}
+      - {x: -0.22551623, y: 0.11856762}
+      - {x: -0.17, y: 0.02}
+      - {x: 0.01, y: 0.02}
+      - {x: 0.08244227, y: 0.11470303}
+      - {x: 0.34, y: 0.19999999}
+      - {x: 0.44279805, y: 0.32074955}
+      - {x: 0.45333123, y: 0.39335594}
+  m_UseDelaunayMesh: 0

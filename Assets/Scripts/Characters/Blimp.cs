@@ -117,6 +117,15 @@ namespace Sumfulla.TankTankBoom
         {
             //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_BLIMP, transform.position, Color.green);
             OnBlimpDestroyedEvent?.Invoke();
+            RemoveFromScene();
+        }
+
+
+        /// <summary>
+        /// Destroys object and any other clean-up tasks when resetting battle
+        /// </summary>
+        public void RemoveFromScene()
+        {
             Destroy(gameObject);
         }
 
