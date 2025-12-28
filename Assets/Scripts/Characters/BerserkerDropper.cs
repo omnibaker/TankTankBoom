@@ -122,6 +122,15 @@ namespace Sumfulla.TankTankBoom
             {
                 _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, false);
             }
+            RemoveFromScene();
+        }
+
+
+        /// <summary>
+        /// Destroys object and any other clean-up tasks when resetting battle
+        /// </summary>
+        public void RemoveFromScene()
+        {
             Destroy(gameObject);
         }
     }

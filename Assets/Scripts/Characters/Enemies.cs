@@ -154,7 +154,7 @@ namespace Sumfulla.TankTankBoom
         {
             foreach (BerserkerDropper dropper in FindObjectsByType<BerserkerDropper>(FindObjectsSortMode.None))
             {
-                dropper.Die();
+                dropper.RemoveFromScene();
             }
         }
 
@@ -165,7 +165,7 @@ namespace Sumfulla.TankTankBoom
         {
             foreach (Blimp blimp in FindObjectsByType<Blimp>(FindObjectsSortMode.None))
             {
-                blimp.Die();
+                blimp.RemoveFromScene();
             }
         }
 
@@ -176,7 +176,7 @@ namespace Sumfulla.TankTankBoom
         {
             foreach (Berserker berserker in FindObjectsByType<Berserker>(FindObjectsSortMode.None))
             {
-                berserker.Die();
+                berserker.RemoveFromScene();
             }
         }
 

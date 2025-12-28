@@ -76,14 +76,20 @@ namespace Sumfulla.TankTankBoom
 
         private void OnDisable()
         {
-            UIPlay.OnAccuracyHeldEvent -= FirePressed;
-            UIPlay.OnAccuracyReleasedEvent -= StopOscillateAccuracy;
-            UIPlay.OnStrikeEvent -= StrikeButtonPressed;
-            Progress.StrikeReadyEvent -= AllowStrike;
-            Progress.RapidFireReadyEvent -= EnableRapidFire;
+            if(UIPlay != null)
+            {
+                UIPlay.OnAccuracyHeldEvent -= FirePressed;
+                UIPlay.OnAccuracyReleasedEvent -= StopOscillateAccuracy;
+                UIPlay.OnStrikeEvent -= StrikeButtonPressed;
+            }
+
+            if(Progress != null)
+            {
+                Progress.StrikeReadyEvent -= AllowStrike;
+                Progress.RapidFireReadyEvent -= EnableRapidFire;
+            }
             OnStandardFireEvent -= (value) => { ResetReadyToFire(); };
         }
-
 
         /* - - - - - GAME FLOW - - - - - */
         /// <summary>
@@ -136,6 +142,7 @@ namespace Sumfulla.TankTankBoom
             UIPlay.DisplayGaugeChildren(false);
 
             // Create environment
+            FindAnyObjectByType<SkyUpdater>()?.UpdateSky();
             GameRef.Environment.GenerateNewWind();
             yield return new WaitForSeconds(0.1f);
             _terrainController.CreateNewBattlefieldTerrain();
@@ -158,7 +165,7 @@ namespace Sumfulla.TankTankBoom
             UIPlay.Power = GameRef.Trajectory.POWER_SLIDER_INIT;
 
             // Announce game to start
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
             UIPlay.MessagePlay("READY!");
             yield return new WaitForSeconds(2f);
             UIPlay.MessagePlay("GO!");
@@ -205,7 +212,10 @@ namespace Sumfulla.TankTankBoom
 
                 // Start new wave
                 Progress.NextBattle();
-                StartCoroutine(StartNewBattle());
+
+                // Restart battle
+                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()));
+                
             }, "OK");
 
             //GameLog.Warn("TODO[PlayManager]: Update high scores if relevant");
@@ -257,15 +267,15 @@ namespace Sumfulla.TankTankBoom
                 EnableTurnBasedFire();
 
                 // Restart battle
-                StartCoroutine(StartNewBattle());
+                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()));
 
             }, "HELL YEAH!");
 
             // Decline button
             pu.AddButton(() =>
             {
-                // Start new wave
-                //GameLog.Warn("TODO[PlayManager]: Go to main menu");
+                // Exit to main menu
+                SceneController.I.GoToScene(GameRef.Scenes.MENU);
             }, "GOD, NO");
         }
 
@@ -328,15 +338,15 @@ namespace Sumfulla.TankTankBoom
                 EnableTurnBasedFire();
 
                 // Restart battle
-                StartNewGame();
+                SceneController.I.FadeOutIn(StartNewGame);
 
             }, "HELL YEAH!");
 
             // Decline button
             pu.AddButton(() =>
             {
-                // Start new wave
-                //GameLog.Warn("TODO[PlayManager]: Go to main menu");
+                // Exit to main menu
+                SceneController.I.GoToScene(GameRef.Scenes.MENU);
             }, "GOD NO");
 
         }

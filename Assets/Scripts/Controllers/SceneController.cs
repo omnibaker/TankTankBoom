@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace Sumfulla.TankTankBoom
 {
@@ -15,6 +16,8 @@ namespace Sumfulla.TankTankBoom
 
         private static bool _isLoading;
         private VisualElement _sceneFade; 
+        private Coroutine _fading;
+
 
         private void Awake()
         {
@@ -58,13 +61,13 @@ namespace Sumfulla.TankTankBoom
         {
             if (_isLoading)
             {
-                GameLog.Say($"Ignoring GoToScene('{sceneName}') — already loading.");
+                GameLog.Say($"Ignoring GoToScene('{sceneName}') ï¿½ already loading.");
                 return;
             }
 
             if (Scene_Current.IsValid() && Scene_Current.name == sceneName)
             {
-                GameLog.Say($"Ignoring GoToScene('{sceneName}') — already in this scene.");
+                GameLog.Say($"Ignoring GoToScene('{sceneName}') ï¿½ already in this scene.");
                 return;
             }
 
@@ -147,6 +150,25 @@ namespace Sumfulla.TankTankBoom
         public void EnableSegueScreen(bool fadeOut)
         {
             _sceneFade.style.opacity = fadeOut ? 1f : 0f;
+        }
+
+        public void FadeOutIn(Action action)
+        {
+            if(_fading != null)
+            {
+                StopCoroutine(_fading);
+            }
+
+            _fading = StartCoroutine(RunFadeOutIn(action));
+        }
+
+        public IEnumerator RunFadeOutIn(Action action)
+        {
+            EnableSegueScreen(true);
+            yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 0.5f);
+            action?.Invoke();
+            yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 0.5f);
+            EnableSegueScreen(false);
         }
     }
 }

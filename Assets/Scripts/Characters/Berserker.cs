@@ -171,6 +171,15 @@ namespace Sumfulla.TankTankBoom
         {
             //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_BERSERKER, transform.position + Vector3.up * 0.5f, Color.green);
             _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, false);
+            RemoveFromScene();
+        }
+
+
+        /// <summary>
+        /// Destroys object and any other clean-up tasks when resetting battle
+        /// </summary>
+        public void RemoveFromScene()
+        {
             Destroy(gameObject);
         }
 

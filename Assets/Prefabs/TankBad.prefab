@@ -98,6 +98,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 394726654372375615, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1611201788896061186, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_FlipX
       value: 1
@@ -108,14 +112,18 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 817b21ec59b69bb4a8855c25b679172f, type: 3}
     - target: {fileID: 1611201788896061186, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.b
-      value: 0.39937097
+      value: 0.57254905
       objectReference: {fileID: 0}
     - target: {fileID: 1611201788896061186, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.g
-      value: 0.39937097
+      value: 0.57254905
       objectReference: {fileID: 0}
     - target: {fileID: 1611201788896061186, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.r
+      value: 0.5882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 1611201788896061186, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2048331372113424185, guid: cd6986a4e08856b428548d407fd40519, type: 3}
@@ -167,6 +175,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5547328876239731473, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5547328876239731473, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5547328876239731473, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -212,11 +228,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8461094027553110624, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.b
-      value: 0.4
+      value: 0.57111067
       objectReference: {fileID: 0}
     - target: {fileID: 8461094027553110624, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.g
-      value: 0.4
+      value: 0.57111067
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461094027553110624, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5849056
       objectReference: {fileID: 0}
     - target: {fileID: 8461094027553110624, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_SortingOrder
@@ -228,11 +248,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8477182767015753594, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.b
-      value: 0.4
+      value: 0.2704254
       objectReference: {fileID: 0}
     - target: {fileID: 8477182767015753594, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_Color.g
-      value: 0.4
+      value: 0.2704254
+      objectReference: {fileID: 0}
+    - target: {fileID: 8477182767015753594, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 8515388124705890726, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_IsActive
@@ -360,10 +384,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cb0365584a37b844c814315f3ae24d10, type: 3}
   - {fileID: 21300000, guid: 6237f5e64e2b09549bb49a3c00cba60b, type: 3}
   ShieldSprites:
-  - {fileID: 21300000, guid: 6b5017bd71df7664fa3a6f70e54bf0a5, type: 3}
-  - {fileID: 21300000, guid: c26ecfc18bf73a34ababec67d45f9d1c, type: 3}
-  - {fileID: 21300000, guid: 5d74b2832f644f14ca3fdcfd0b33fd56, type: 3}
-  - {fileID: 21300000, guid: 754ce240d76fc0b4883f55a2d6909251, type: 3}
+  - {fileID: 21300000, guid: c45a0a56a001d4decb890df67a9d3577, type: 3}
+  - {fileID: 21300000, guid: 7a6b30c1896064b6289582b69ccdee08, type: 3}
+  - {fileID: 21300000, guid: 1d7abacee65bd4493b28dfb1b252ce95, type: 3}
+  - {fileID: 21300000, guid: 55d2b344899834fada2d994120bf2125, type: 3}
   _cameraShake: {fileID: 0}
 --- !u!95 &8583931009016649432
 Animator:
