@@ -74,7 +74,7 @@ namespace Sumfulla.TankTankBoom
 
             // Attempt to find player tank with racast, drop bomb if found
             int layermask = 1 << LayerMask.NameToLayer(LayerNames.PlayerTarget.ToString());
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 300f, layermask);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 1000f, layermask);
             if (hit.collider != null)
             {
                 if (!_bombDropped)
@@ -119,7 +119,6 @@ namespace Sumfulla.TankTankBoom
             OnBlimpDestroyedEvent?.Invoke();
             RemoveFromScene();
         }
-
 
         /// <summary>
         /// Destroys object and any other clean-up tasks when resetting battle

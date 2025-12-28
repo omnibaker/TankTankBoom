@@ -165,9 +165,9 @@ namespace Sumfulla.TankTankBoom
         public IEnumerator RunFadeOutIn(Action action)
         {
             EnableSegueScreen(true);
-            yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 1f);
+            yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 0.5f);
             action?.Invoke();
-            yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 1f);
+            yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 0.5f);
             EnableSegueScreen(false);
         }
     }
