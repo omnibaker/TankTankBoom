@@ -214,6 +214,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
     - target: {fileID: 2048331372113424185, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 919eb1d3b51ce5d44843ac2ea9ca49f6, type: 3}
+    - target: {fileID: 2048331372113424185, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
@@ -454,32 +458,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36061c80ffa8e094693b77e40b4827f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sumfulla.Tanked.TankPlayer
-  _gravityScale: 0.3
-  Explosion: {fileID: 3944244449816077814}
-  PlayerState: {fileID: 6692683441451095689}
-  ShieldState: {fileID: 6255554699761589938}
-  CannonState: {fileID: 1762840811942229992}
-  PlayerSprites:
+  _explosion: {fileID: 3944244449816077814}
+  _tankStateRenderer: {fileID: 6692683441451095689}
+  _tankImpactRenderer: {fileID: 6255554699761589938}
+  _cannonImpactRenderer: {fileID: 1762840811942229992}
+  _stateSprites:
   - {fileID: 21300000, guid: 817b21ec59b69bb4a8855c25b679172f, type: 3}
   - {fileID: 21300000, guid: 862acecfc1cba4b47b7ef410e8fe0147, type: 3}
   - {fileID: 21300000, guid: 76ecde872a3a4754b8533d8d12493570, type: 3}
   - {fileID: 21300000, guid: cb0365584a37b844c814315f3ae24d10, type: 3}
   - {fileID: 21300000, guid: 793298adb4c0b5b40bd3d2c03b1bb730, type: 3}
-  ShieldSprites:
+  _impactSprites:
   - {fileID: 21300000, guid: 919eb1d3b51ce5d44843ac2ea9ca49f6, type: 3}
   - {fileID: 21300000, guid: 411f80742902a3e4e9441f7a3ecd8b9c, type: 3}
   - {fileID: 21300000, guid: 6f78dacdfad5efa44b0df446102b11e7, type: 3}
   - {fileID: 21300000, guid: 6147d4550ed9022419b364ccfa7880ee, type: 3}
   - {fileID: 21300000, guid: 346ae09a9a6875646912da8b59fc2a0c, type: 3}
-  ShieldColors:
+  _impactColors:
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.5, b: 0, a: 1}
+  - {r: 1, g: 0.5019608, b: 0, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0.6692667, a: 1}
+  - {r: 1, g: 0, b: 0.67058825, a: 1}
   _flag: {fileID: 3750452407150515617}
   _shieldDamage: 0
-  _maxShieldDamage: 0
 --- !u!114 &7747910970298885847
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ namespace Sumfulla.TankTankBoom
 		{
 			if (_camTransform == null)
 			{
-				Camera cam = FindFirstObjectByType<Camera>();
+				Camera cam = FindAnyObjectByType<Camera>();
 				if (cam != null)
 				{
 					_camTransform = cam.transform;

@@ -6,7 +6,7 @@ namespace Sumfulla.TankTankBoom
     {
         public static class AnimationTags
         {
-            public const string READY_TO_EXLODE = "IsReadyToExplode";
+            public const string READY_TO_EXPLODE = "IsReadyToExplode";
             public const string READY_TO_DIE = "IsReadyToDie";
         }
 

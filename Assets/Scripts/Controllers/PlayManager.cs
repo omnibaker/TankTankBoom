@@ -49,7 +49,7 @@ namespace Sumfulla.TankTankBoom
 
         private void Start()
         {
-            _cameraShaker = FindFirstObjectByType<CameraShaker>();
+            _cameraShaker = FindAnyObjectByType<CameraShaker>();
             ResetTimer();
             StartNewGame();
         }
@@ -65,7 +65,7 @@ namespace Sumfulla.TankTankBoom
 
         private void OnEnable()
         {
-            UIPlay = FindFirstObjectByType<UI_Play>();
+            UIPlay = FindAnyObjectByType<UI_Play>();
             UIPlay.OnAccuracyHeldEvent += FirePressed;
             UIPlay.OnAccuracyReleasedEvent += StopOscillateAccuracy;
             UIPlay.OnStrikeEvent += StrikeButtonPressed;
@@ -226,7 +226,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void BattleFailed(FailureReason reason)
         {
-            // Stop timer and player
+            // Stop timer and playser
             State.Pause();
 
             // Hide ready gauge
@@ -611,12 +611,12 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveAllAmmo()
         {
-            TankProjectile[] projectiles = FindObjectsByType<TankProjectile>(FindObjectsSortMode.None);
+            TankProjectile[] projectiles = FindObjectsByType<TankProjectile>();
             foreach (TankProjectile p in projectiles)
             {
                 p.Die();
             }
-            StrikeBomb[] bombs = FindObjectsByType<StrikeBomb>(FindObjectsSortMode.None);
+            StrikeBomb[] bombs = FindObjectsByType<StrikeBomb>();
             foreach (StrikeBomb b in bombs)
             {
                 b.Die();

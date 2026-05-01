@@ -157,7 +157,7 @@ namespace Sumfulla.TankTankBoom
             // Stop 'run' coroutine and disable physical elements
             EndBersekerRun();
             DisableNonExplodingParts();
-            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
 
             // Destroy any close land tiles
             TerrainController.Instance.DestroyTerrainSet(transform.position, 0);
@@ -170,7 +170,7 @@ namespace Sumfulla.TankTankBoom
         public void Die()
         {
             //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_BERSERKER, transform.position + Vector3.up * 0.5f, Color.green);
-            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, false);
+            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, false);
             RemoveFromScene();
         }
 

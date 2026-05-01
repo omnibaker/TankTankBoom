@@ -93,7 +93,7 @@ namespace Sumfulla.TankTankBoom
             // Trigger explosion
             if (_animator != null)
             {
-                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
             }
             else
             {
@@ -120,7 +120,7 @@ namespace Sumfulla.TankTankBoom
             //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_BDROPPER, transform.position, Color.green);
             if (_animator != null)
             {
-                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, false);
+                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, false);
             }
             RemoveFromScene();
         }

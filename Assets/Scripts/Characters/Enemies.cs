@@ -152,7 +152,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveBerserkerDroppers()
         {
-            foreach (BerserkerDropper dropper in FindObjectsByType<BerserkerDropper>(FindObjectsSortMode.None))
+            foreach (BerserkerDropper dropper in FindObjectsByType<BerserkerDropper>())
             {
                 dropper.RemoveFromScene();
             }
@@ -163,7 +163,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveEnemyBlimps()
         {
-            foreach (Blimp blimp in FindObjectsByType<Blimp>(FindObjectsSortMode.None))
+            foreach (Blimp blimp in FindObjectsByType<Blimp>())
             {
                 blimp.RemoveFromScene();
             }
@@ -174,7 +174,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveBerserkers()
         {
-            foreach (Berserker berserker in FindObjectsByType<Berserker>(FindObjectsSortMode.None))
+            foreach (Berserker berserker in FindObjectsByType<Berserker>())
             {
                 berserker.RemoveFromScene();
             }

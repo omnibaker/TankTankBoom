@@ -387,24 +387,24 @@ MonoBehaviour:
   _roomForError: 0.03
   _shieldDamage: 0
   _maxShieldDamage: 0
-  ShieldColors:
-  - {r: 0, g: 1, b: 0, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.5, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0.67058825, a: 1}
-  StateSprites:
+  _stateSprites:
   - {fileID: 21300000, guid: 817b21ec59b69bb4a8855c25b679172f, type: 3}
   - {fileID: 21300000, guid: 862acecfc1cba4b47b7ef410e8fe0147, type: 3}
   - {fileID: 21300000, guid: 76ecde872a3a4754b8533d8d12493570, type: 3}
   - {fileID: 21300000, guid: cb0365584a37b844c814315f3ae24d10, type: 3}
   - {fileID: 21300000, guid: 793298adb4c0b5b40bd3d2c03b1bb730, type: 3}
-  ShieldSprites:
+  _impactSprites:
   - {fileID: 21300000, guid: 919eb1d3b51ce5d44843ac2ea9ca49f6, type: 3}
   - {fileID: 21300000, guid: 411f80742902a3e4e9441f7a3ecd8b9c, type: 3}
   - {fileID: 21300000, guid: 6f78dacdfad5efa44b0df446102b11e7, type: 3}
   - {fileID: 21300000, guid: 6147d4550ed9022419b364ccfa7880ee, type: 3}
   - {fileID: 21300000, guid: 346ae09a9a6875646912da8b59fc2a0c, type: 3}
+  _impactColors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.5019608, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0.67058825, a: 1}
   _cameraShake: {fileID: 0}
 --- !u!95 &8583931009016649432
 Animator:

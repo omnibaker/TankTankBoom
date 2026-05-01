@@ -31,7 +31,7 @@ namespace Sumfulla.TankTankBoom
 
         private void Start()
         {
-            _player = FindFirstObjectByType<TankPlayer>();
+            _player = FindAnyObjectByType<TankPlayer>();
             _startPoint = new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + OFFSCREEN_OFFSET, transform.position.y, Camera.main.nearClipPlane);
             _endPointX = Camera.main.ScreenToWorldPoint(Vector3.zero).x - OFFSCREEN_OFFSET;
         }
@@ -102,7 +102,7 @@ namespace Sumfulla.TankTankBoom
             PlayManager.I.Score.AddPoints(GameRef.Points.BLIMP_KILL);
             if(TryGetComponent(out Animator animator))
             {
-                animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+                animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
             }
             else
             {

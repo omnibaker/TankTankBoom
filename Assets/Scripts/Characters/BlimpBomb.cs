@@ -31,7 +31,7 @@ namespace Sumfulla.TankTankBoom
             // Set explosion animation
             if(TryGetComponent(out Animator anim))
             {
-                anim.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+                anim.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
             }
             else
             {
