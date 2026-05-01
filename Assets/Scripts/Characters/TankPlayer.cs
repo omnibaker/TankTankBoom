@@ -28,15 +28,13 @@ namespace Sumfulla.TankTankBoom
 
         public Vector3 PausedVelocity { get; set; } = Vector3.zero;
         public float GravityScale { get { return _gravityScale; } }
-        public int ShieldDamage { get; set; }
-        public float MaxShieldDamage { get { return _maxShieldDamage; } }
+        [SerializeField] private int _shieldDamage;
 
         private Collider2D[] _colliders;
         private Coroutine _hitFading;
         private Animator _animator;
         private Rigidbody2D _rb;
         private Vector3 _tankPos;
-        private float _maxShieldDamage;
 
         internal void Awake()
         {
@@ -44,12 +42,6 @@ namespace Sumfulla.TankTankBoom
             _colliders = GetComponents<Collider2D>();
             _animator = GetComponent<Animator>();
         }
-
-        private void Start()
-        {
-            _maxShieldDamage = MAX_SHIELD_DAMAGE;
-        }
-
        
         /// <summary>
         /// Stops any movement cause by force or impacts
@@ -83,9 +75,9 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveAllDamage()
         {
-            ShieldDamage = 0;
-            PlayerState.sprite = PlayerSprites[ShieldDamage];
-            ShieldState.sprite = ShieldSprites[ShieldDamage];
+            _shieldDamage = 0;
+            PlayerState.sprite = PlayerSprites[_shieldDamage];
+            ShieldState.sprite = ShieldSprites[_shieldDamage];
         }
 
         /// <summary>
@@ -95,15 +87,16 @@ namespace Sumfulla.TankTankBoom
         {
             if (PlayManager.I.GodMode) return;
 
-            ShieldDamage++;
-            GameLog.Say($"Player Hit! Damage={ShieldDamage} | Max{MaxShieldDamage}");
+            _shieldDamage++;
+            GameLog.Say($"Player Hit! Damage={_shieldDamage} | Max{MAX_SHIELD_DAMAGE}");
 
-            if (ShieldDamage > MaxShieldDamage)
+            if (_shieldDamage > MAX_SHIELD_DAMAGE)
             {
                 GameAudio.I.Play(SoundType.MachineExplode);
 
                 PlayManager.I.State.Pause();
                 Explode();
+                TriggerDamageGlow(true);
             }
             else
             {
@@ -111,11 +104,12 @@ namespace Sumfulla.TankTankBoom
                 GameAudio.I.Play(SoundType.GroundExplode01);
 
                 // Update player sprite
-                PlayerState.sprite = PlayerSprites[ShieldDamage - 1];
+                int damageIndex = _shieldDamage <= 2 ? 0 : _shieldDamage - 1;
+                PlayerState.sprite = PlayerSprites[damageIndex];
 
                 // Update shield/dmg sprites
-                ShieldState.sprite = ShieldSprites[ShieldDamage - 1];
-                ShieldState.color = ShieldColors[ShieldDamage - 1];
+                ShieldState.sprite = ShieldSprites[damageIndex];
+                ShieldState.color = ShieldColors[_shieldDamage - 1];
 
                 TriggerDamageGlow();
             }
@@ -124,11 +118,11 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// Triggers coroutine which displays shield sprites, stops any previous coroyutine run
         /// </summary>
-        internal void TriggerDamageGlow()
+        internal void TriggerDamageGlow(bool isFinal = false)
         {
             // Activate shield objects
             ShieldState.gameObject.SetActive(true);
-            CannonState.gameObject.SetActive(true);
+            if (!isFinal) CannonState.gameObject.SetActive(true);
 
             // Start fade away
             if (_hitFading != null)
@@ -136,15 +130,15 @@ namespace Sumfulla.TankTankBoom
                 StopCoroutine(_hitFading);
                 _hitFading = null;
             }
-            _hitFading = StartCoroutine(FadeHitIndicator());
+            _hitFading = StartCoroutine(FadeHitIndicator(isFinal));
         }
 
         /// <summary>
         /// Coroutine that displays shield sprites and fades out color property upon impact
         /// </summary>
-        public IEnumerator FadeHitIndicator()
+        public IEnumerator FadeHitIndicator(bool isFinal)
         {
-            CannonState.color = ShieldState.color;
+            if(!isFinal) CannonState.color = ShieldState.color;
             Color shieldColor = ShieldState.color;
             float t = 0;
 
@@ -152,14 +146,14 @@ namespace Sumfulla.TankTankBoom
             {
                 shieldColor.a = Mathf.Lerp(1f, 0, t);
                 ShieldState.color = shieldColor;
-                CannonState.color = shieldColor;
-                t += Time.deltaTime;
+                if (!isFinal) CannonState.color = shieldColor;
+                t += Time.deltaTime * 2f;
                 yield return null;
             }
 
             shieldColor.a = 0;
             ShieldState.color = shieldColor;
-            CannonState.color = shieldColor;
+            if (!isFinal) CannonState.color = shieldColor;
 
             _hitFading = null; 
             ShieldState.gameObject.SetActive(false);
@@ -179,7 +173,7 @@ namespace Sumfulla.TankTankBoom
             }
 
             // Updates player sprite
-            PlayerState.sprite = PlayerSprites[ShieldDamage - 1];
+            PlayerState.sprite = PlayerSprites[_shieldDamage - 1];
 
             // Deactivate damage sprite
             ShieldState.gameObject.SetActive(false);

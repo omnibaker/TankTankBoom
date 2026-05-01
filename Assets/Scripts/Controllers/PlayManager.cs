@@ -214,7 +214,7 @@ namespace Sumfulla.TankTankBoom
                 Progress.NextBattle();
 
                 // Restart battle
-                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()));
+                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()), 0.5f);
                 
             }, "OK");
 
@@ -267,7 +267,7 @@ namespace Sumfulla.TankTankBoom
                 EnableTurnBasedFire();
 
                 // Restart battle
-                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()));
+                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()), 0.5f);
 
             }, "HELL YEAH!");
 
@@ -275,7 +275,7 @@ namespace Sumfulla.TankTankBoom
             pu.AddButton(() =>
             {
                 // Exit to main menu
-                SceneController.I.GoToScene(GameRef.Scenes.MENU);
+                SceneController.I.GoToScene(GameRef.Scenes.MENU, 0.5f);
             }, "GOD, NO");
         }
 
@@ -338,7 +338,7 @@ namespace Sumfulla.TankTankBoom
                 EnableTurnBasedFire();
 
                 // Restart battle
-                SceneController.I.FadeOutIn(StartNewGame);
+                SceneController.I.FadeOutIn(StartNewGame, 0.5f);
 
             }, "HELL YEAH!");
 
@@ -346,7 +346,7 @@ namespace Sumfulla.TankTankBoom
             pu.AddButton(() =>
             {
                 // Exit to main menu
-                SceneController.I.GoToScene(GameRef.Scenes.MENU);
+                SceneController.I.GoToScene(GameRef.Scenes.MENU, 0.5f);
             }, "GOD NO");
 
         }

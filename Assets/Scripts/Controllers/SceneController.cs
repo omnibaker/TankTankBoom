@@ -57,7 +57,7 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// Initiates a scene transition, if one isn't already happening
         /// </summary>
-        public void GoToScene(string sceneName)
+        public void GoToScene(string sceneName, float delay = 0)
         {
             if (_isLoading)
             {
@@ -72,14 +72,15 @@ namespace Sumfulla.TankTankBoom
             }
 
             _isLoading = true;
-            StartCoroutine(FadeAndLoad(sceneName));
+            StartCoroutine(FadeAndLoad(sceneName, delay));
         }
 
         /// <summary>
         /// Plays the fade-out animation, waits for it, then loads a new additive scene
         /// </summary>
-        private IEnumerator FadeAndLoad(string sceneName)
+        private IEnumerator FadeAndLoad(string sceneName, float delay)
         {
+            yield return new WaitForSeconds(delay);
             // Trigger UI fade-to-black
             EnableSegueScreen(true);
             yield return new WaitForSeconds(GameRef.Time.SCENE_FADE);
@@ -145,25 +146,26 @@ namespace Sumfulla.TankTankBoom
         }
 
         /// <summary>
-        /// Sets the fade overlay opacity to trigger its animation
+        /// Sets the fade overlay opacity to trigger its USS animation
         /// </summary>
         public void EnableSegueScreen(bool fadeOut)
         {
             _sceneFade.style.opacity = fadeOut ? 1f : 0f;
         }
 
-        public void FadeOutIn(Action action)
+        public void FadeOutIn(Action action, float delay = 0)
         {
             if(_fading != null)
             {
                 StopCoroutine(_fading);
             }
 
-            _fading = StartCoroutine(RunFadeOutIn(action));
+            _fading = StartCoroutine(RunFadeOutIn(action, delay));
         }
 
-        public IEnumerator RunFadeOutIn(Action action)
+        public IEnumerator RunFadeOutIn(Action action, float delay)
         {
+            yield return new WaitForSeconds(delay);
             EnableSegueScreen(true);
             yield return new WaitForSeconds(2f * GameRef.Time.SCENE_FADE + 0.5f);
             action?.Invoke();
