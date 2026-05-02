@@ -96,7 +96,8 @@ namespace Sumfulla.TankTankBoom
                 GameAudio.I.Play(SoundType.GroundExplode01);
 
                 // Update player sprite
-                int damageIndex = _shieldDamage <= 2 ? 0 : _shieldDamage - 1;
+                //int damageIndex = _shieldDamage <= 2 ? 0 : _shieldDamage - 1;
+                int damageIndex = _shieldDamage - 1;
                 _tankStateRenderer.sprite = _stateSprites[damageIndex];
 
                 // Update shield/dmg sprites

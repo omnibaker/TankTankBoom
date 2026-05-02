@@ -55,7 +55,7 @@ namespace Sumfulla.TankTankBoom
                     }
                     else
                     {
-                        Debug.LogError("Has already been triggered!");
+                        GameLog.Warn($"Projectile contact has already been triggered [{collider.gameObject.name}]");
                     }
 
                 }
@@ -73,7 +73,7 @@ namespace Sumfulla.TankTankBoom
                     }
                     else
                     {
-                        Debug.LogError("Has already been triggered!");
+                        GameLog.Warn($"Projectile contact has already been triggered [{collider.gameObject.name}]");
                     }
                 }
             }

@@ -521,7 +521,7 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// When 'air strike' mission is completed, updates state properties and UI components
         /// </summary>
-        public void StrikeSuccesful()
+        public void StrikeSuccessful()
         {
             if (_strikeState == StrikeState.DROPPING)
             {
@@ -537,6 +537,8 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void StrikeButtonPressed()
         {
+            if (State.Current != RunState.PLAY) return;
+
             if (_strikeState == StrikeState.READY)
             {
                 AirSupport.LaunchStrikeFlyover();

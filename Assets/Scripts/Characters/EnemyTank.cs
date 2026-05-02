@@ -8,7 +8,6 @@ namespace Sumfulla.TankTankBoom
 {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(LineRenderer))]
-    [RequireComponent(typeof(Rigidbody2D))]
     public class EnemyTank : MonoBehaviour, IExplodableEnemy
     {
         private const int MAX_SHIELD_DAMAGE = 4;
