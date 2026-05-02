@@ -17,10 +17,21 @@ namespace Sumfulla.TankTankBoom
 
         private Vector3 _thresholds;
         private Animator _animator;
+        public PlayManager PlayMgr { get; set; }
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
+
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in BerserkerDropper");
+                }
+            }
         }
 
         /// <summary>
@@ -33,14 +44,19 @@ namespace Sumfulla.TankTankBoom
 
             while (transform.position.y > _thresholds.y)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (PlayMgr.State.Current == RunState.PLAY)
                 {
                     transform.position += SPEED * Time.deltaTime * Vector3.down;
                 }
                 yield return null;
             }
 
-            Instantiate(_berserkerPF, transform.position + Vector3.down / 2f, Quaternion.identity);
+            GameObject berserkerObject = Instantiate(_berserkerPF, transform.position + Vector3.down / 2f, Quaternion.identity);
+            if (berserkerObject.TryGetComponent(out Berserker berserker))
+            {
+                berserker.PlayMgr = PlayMgr;
+            }
+            GameAudio.I.Play(SoundType.BombDropping);
             StartCoroutine(FlyAway());
         }
 
@@ -51,7 +67,7 @@ namespace Sumfulla.TankTankBoom
         {
             while (transform.position.x < _thresholds.x)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (PlayMgr.State.Current == RunState.PLAY)
                 {
                     transform.position += 3f * Time.deltaTime * new Vector3(1f, 1f, 0);
                 }
@@ -77,7 +93,7 @@ namespace Sumfulla.TankTankBoom
             GameAudio.I.Play(SoundType.MachineExplode);
 
             // Update score
-            PlayManager.I.Score.AddPoints(GameRef.Points.BDROPPER_KILL);
+            PlayMgr.Score.AddPoints(GameRef.Points.BDROPPER_KILL, PlayMgr.UIPlay, PlayMgr.Progress);
 
             // Stop 'run' coroutine and disable physical elements
             StopAllCoroutines();
@@ -93,7 +109,7 @@ namespace Sumfulla.TankTankBoom
             // Trigger explosion
             if (_animator != null)
             {
-                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
             }
             else
             {
@@ -120,7 +136,7 @@ namespace Sumfulla.TankTankBoom
             //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_BDROPPER, transform.position, Color.green);
             if (_animator != null)
             {
-                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, false);
+                _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, false);
             }
             RemoveFromScene();
         }

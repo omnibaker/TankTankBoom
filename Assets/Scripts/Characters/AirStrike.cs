@@ -8,29 +8,32 @@ namespace Sumfulla.TankTankBoom
 {
     public class AirStrike : MonoBehaviour
     {
-        private const float SPEED = 10f;
-        private const int NUM_OF_BOMBS = 10;
-
+        private const float FLY_SPEED = 10f;
+        private const int BOMB_COUNT = 10;
+        private const float BOMB_DELAY = 0.05f;
+        
+        [Header("References")]
         [SerializeField] private GameObject _bombPf;
         [SerializeField] private Transform _bombDispatchPoint;
-        [SerializeField] private List<GameObject> _bombs;
+        private List<GameObject> _spawnedBombs = new List<GameObject>();
 
-        public bool BombsReleased { get { return _bombingComplete; } }
+        public bool BombsReleased { get { return _isComplete; } }
         private float _endX;
-        private bool _bombingStarted;
-        private bool _bombingComplete;
+        private bool _hasStartedBombing;
+        private bool _isComplete;
 
-        public Action<bool> OnFlyoverCompleted;
-        public Action OnBombingCompleted;
+        public event Action<bool> FlyoverCompleted;
+        public event Action BombingCompleted;
 
         /// <summary>
         /// Set up callback listeners and initiates flyover
         /// </summary>
-        public void Init(float endX, Action<bool> strikeState, Action bombingComplete)
+        public void Init(float endX, Action<bool> onFlyoverCompleted, Action onBombingCompleted)
         {
-            OnFlyoverCompleted = strikeState;
-            OnBombingCompleted = bombingComplete;
             _endX = endX;
+            FlyoverCompleted = onFlyoverCompleted;
+            BombingCompleted = onBombingCompleted;
+
             StartCoroutine(Fly());
         }
 
@@ -41,11 +44,11 @@ namespace Sumfulla.TankTankBoom
         {
             while (transform.position.x < _endX)
             {
-                transform.position += Vector3.right * Time.deltaTime * SPEED;
+                transform.position += FLY_SPEED * Time.deltaTime * Vector3.right;
                 yield return null;
             }
 
-            OnFlyoverCompleted.Invoke(_bombingStarted);
+            FlyoverCompleted.Invoke(_hasStartedBombing);
         }
 
         /// <summary>
@@ -53,6 +56,11 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void ExecuteStrike()
         {
+            if (_hasStartedBombing || _isComplete)
+            {
+                return;
+            }
+
             StartCoroutine(DropBombs());
         }
 
@@ -61,19 +69,21 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private IEnumerator DropBombs()
         {
-            _bombingStarted = true;
-            int numOfBombs = NUM_OF_BOMBS;
-            List<Coroutine> listOfBombDrops = new List<Coroutine>();
+            _hasStartedBombing = true;
+
+
+            int numOfBombs = BOMB_COUNT;
+            List<Coroutine> _activeDrops = new List<Coroutine>();
 
             for (int i = 0; i < numOfBombs; i++)
             {
-                // Spawn
+                // Spawn bombs
                 GameObject bomb = Instantiate(_bombPf, _bombDispatchPoint.position, Quaternion.identity);
-                _bombs.Add(bomb);
+                _spawnedBombs.Add(bomb);
 
                 if (bomb.TryGetComponent(out StrikeBomb sb))
                 {
-                    listOfBombDrops.Add(StartCoroutine(sb.DropBombUntilImpact()));
+                    _activeDrops.Add(StartCoroutine(sb.DropBombUntilImpact()));
                 }
 
                 // Trigger ground explosion sound
@@ -82,38 +92,45 @@ namespace Sumfulla.TankTankBoom
                     GameAudio.I.Play(SoundType.BombDropping);
                 }
 
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(BOMB_DELAY);
             }
 
             // Wait until all bombs dropped and signal raid is over
-            foreach (Coroutine c in listOfBombDrops)
+            foreach (Coroutine drop in _activeDrops)
             {
-                yield return c;
+                yield return drop;
             }
 
-            BombingCompleted();
+            CompleteStrike();
         }
-        
+
         /// <summary>
         /// Cleans up scene after bomb and removes any strike objects
         /// </summary>
-        public void BombingCompleted()
+        public void CompleteStrike()
         {
+            if (_isComplete)
+            {
+                return;
+            }
+            _isComplete = true;
+
             StopAllCoroutines();
 
             // Ensure all bombs are indeed removed
-            foreach(GameObject bomb in _bombs)
+            foreach(GameObject bomb in _spawnedBombs)
             {
-                if(_bombs != null)
+                if(_spawnedBombs != null)
                 {
                     Destroy(bomb);
                 }
             }
+            _spawnedBombs.Clear();
 
             // Remove any callbacks and destroy strike object
-            OnBombingCompleted.Invoke();
-            OnBombingCompleted = null;
-            OnFlyoverCompleted = null;
+            BombingCompleted.Invoke();
+            BombingCompleted = null;
+            FlyoverCompleted = null;
             Destroy(gameObject);
         }
     }

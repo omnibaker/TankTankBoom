@@ -40,6 +40,8 @@ namespace Sumfulla.TankTankBoom
         private VisualElement _windLeftArrow;
         private VisualElement _windRightArrow;
 
+        private PlayManager _playManager;
+
         public event Action<float> OnAngleChangeEvent;
         public event Action<float> OnPowerChangeEvent;
         public event Action<float> OnAccuracyChangeEvent;
@@ -72,7 +74,17 @@ namespace Sumfulla.TankTankBoom
 
         private bool _fireButtonIsPressed;
         private bool _strikeButtonIsPressed;
-    
+        private void Awake()
+        {
+            // Play manager failsafe
+            _playManager = FindAnyObjectByType<PlayManager>();
+            if (_playManager == null)
+            {
+                GameLog.Warn("PlayManager not assigned in UIPlayer");
+            }
+
+        }
+
         private void OnEnable()
         {
             // Get central UI document
@@ -244,16 +256,16 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private void ConvertAngleSliderToReadible(float newAngle)
         {
-            PlayManager.I.Player.CurrentAngle = newAngle;
-            _angleSlider.Updatelabel(PlayManager.I.Player.CurrentAngle.ToString());
+            _playManager.Player.CurrentAngle = newAngle;
+            _angleSlider.Updatelabel(_playManager.Player.CurrentAngle.ToString());
         }
         /// <summary>
         /// Calculate power slider values if needed and update label
         /// </summary>
         private void ConvertPowerSliderToReadible(float newPower)
         {
-            PlayManager.I.Player.CurrentPower = GameRef.Trajectory.POWER_MIN + (newPower * (GameRef.Trajectory.POWER_MAX - GameRef.Trajectory.POWER_MIN));
-            _powerSlider.Updatelabel(((int)PlayManager.I.Player.CurrentPower).ToString());
+            _playManager.Player.CurrentPower = GameRef.Trajectory.POWER_MIN + (newPower * (GameRef.Trajectory.POWER_MAX - GameRef.Trajectory.POWER_MIN));
+            _powerSlider.Updatelabel(((int)_playManager.Player.CurrentPower).ToString());
         }
 
         /// <summary>
@@ -379,8 +391,8 @@ namespace Sumfulla.TankTankBoom
         {
             if (enable)
             {
-                VisualElement enableLabel = PlayManager.I.Firing == FiringType.STD ? _fireLabel : _rapidFireLabel;
-                VisualElement disableLabel = PlayManager.I.Firing == FiringType.STD ? _rapidFireLabel : _fireLabel;
+                VisualElement enableLabel = _playManager.Firing == FiringType.STD ? _fireLabel : _rapidFireLabel;
+                VisualElement disableLabel = _playManager.Firing == FiringType.STD ? _rapidFireLabel : _fireLabel;
                 enableLabel.style.display = DisplayStyle.Flex;
                 disableLabel.style.display = DisplayStyle.None;
             }
@@ -472,7 +484,7 @@ namespace Sumfulla.TankTankBoom
             float t = 0;
             float shakeAmount = 10f;
 
-            VisualElement label = PlayManager.I.Firing == FiringType.STD ? _fireLabel: _rapidFireLabel;
+            VisualElement label = _playManager.Firing == FiringType.STD ? _fireLabel: _rapidFireLabel;
 
             while (t < 1f)
             {

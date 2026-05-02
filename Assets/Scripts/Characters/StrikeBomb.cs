@@ -7,13 +7,26 @@ namespace Sumfulla.TankTankBoom
     {
         private float _speed = 2f;
         private bool _isDropping = true;
+        public PlayManager PlayMgr { get; set; }
 
+        private void Awake()
+        {
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in StrikeBomb");
+                }
+            }
+        }
         private void OnTriggerEnter2D(Collider2D collider)
         {
             if (collider.CompareTag(TagNames.Enemy.ToString()))
             {
                 collider.gameObject.GetComponent<IExplodableEnemy>().InflictDamage();
-                PlayManager.I.CameraShake();
+                PlayMgr.CameraShake();
                 _speed = 0.5f;
             }
             else
@@ -24,7 +37,7 @@ namespace Sumfulla.TankTankBoom
 
             if(TryGetComponent(out Animator anim))
             {
-                anim.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+                anim.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
             }
             else
             {
@@ -42,7 +55,7 @@ namespace Sumfulla.TankTankBoom
 
             while (_isDropping)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY && _isDropping)
+                if (PlayMgr.State.Current == RunState.PLAY && _isDropping)
                 {
                     transform.position = transform.position + _speed * Time.deltaTime * dropWithRightMomentum;
                 }

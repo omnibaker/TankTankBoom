@@ -1,32 +1,35 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Sumfulla.TankTankBoom
 {
     public class AirSupport : MonoBehaviour
     {
-        [SerializeField] private GameObject _airStrikePF;
+        private const float SPAWN_OFFSET = 200f;
+        private const float HEIGHT_PERCENT = 0.8f;
 
-        private Vector3 _limitsStart;
-        private Vector3 _limitsEnd;
+        [SerializeField] private GameObject _airStrikePF;
 
         private AirStrike _strike;
 
         /// <summary>
         /// Public method to initiate an airstrike from AirStrike prefab
         /// </summary>
-        public void LaunchStrikeFlyover()
+        public void LaunchStrikeFlyover(Action<bool> strikeFlyoverEnded, Action strikeSuccessful)
         {
+            Camera cam = Camera.main;
+
             // Determine entry position at top left of screen
-            _limitsStart = Camera.main.ScreenToWorldPoint(new Vector3(-200f, Screen.height * 0.8f, 0));
-            _limitsEnd = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width + 200f, Screen.height * 0.8f, 0));
-            Vector3 entryPosition = new Vector3(_limitsStart.x, _limitsStart.y, Camera.main.nearClipPlane);
+            Vector3 limitsStart = cam.ScreenToWorldPoint(new Vector3(-SPAWN_OFFSET, Screen.height * HEIGHT_PERCENT, 0));
+            Vector3 limitsEnd = cam.ScreenToWorldPoint(new Vector3(Screen.width + SPAWN_OFFSET, Screen.height * HEIGHT_PERCENT, 0));
+            Vector3 entryPosition = new Vector3(limitsStart.x, limitsStart.y, 0);
 
             // Create AirStrike plane object and initialise behaviour
             GameObject plane = Instantiate(_airStrikePF, entryPosition, Quaternion.identity);
             if (plane.TryGetComponent(out AirStrike strike))
             {
                 _strike = strike;
-                _strike.Init(_limitsEnd.x, PlayManager.I.StrikeFlyoverEnded, PlayManager.I.StrikeSuccesful);
+                _strike.Init(limitsEnd.x, strikeFlyoverEnded, strikeSuccessful);
             }
         }
 
@@ -48,7 +51,7 @@ namespace Sumfulla.TankTankBoom
         {
             if (_strike != null)
             {
-                _strike.BombingCompleted();
+                _strike.CompleteStrike();
             }
         }
     }

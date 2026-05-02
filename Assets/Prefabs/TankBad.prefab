@@ -34,6 +34,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6052986108414144022
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -78,8 +79,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 4f3ded5bcb140af4c82b9f6021e934d5, type: 3}
+  m_SortingOrder: -1
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: 13486b6780da47141a0ef3ed3b7d53b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -88,7 +90,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &8361259436379552926
 PrefabInstance:
@@ -124,6 +125,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1611201788896061186, guid: cd6986a4e08856b428548d407fd40519, type: 3}
       propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973031864363722168, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973031864363722168, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1973031864363722168, guid: cd6986a4e08856b428548d407fd40519, type: 3}
+      propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2048331372113424185, guid: cd6986a4e08856b428548d407fd40519, type: 3}
@@ -372,22 +385,26 @@ MonoBehaviour:
   _userInputAngle: 0
   _gunAngle: 145
   _roomForError: 0.03
-  ShieldColors:
-  - {r: 0, g: 1, b: 0, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.5, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0, a: 1}
-  StateSprites:
+  _shieldDamage: 0
+  _maxShieldDamage: 0
+  _stateSprites:
   - {fileID: 21300000, guid: 817b21ec59b69bb4a8855c25b679172f, type: 3}
   - {fileID: 21300000, guid: 862acecfc1cba4b47b7ef410e8fe0147, type: 3}
   - {fileID: 21300000, guid: 76ecde872a3a4754b8533d8d12493570, type: 3}
   - {fileID: 21300000, guid: cb0365584a37b844c814315f3ae24d10, type: 3}
-  - {fileID: 21300000, guid: 6237f5e64e2b09549bb49a3c00cba60b, type: 3}
-  ShieldSprites:
-  - {fileID: 21300000, guid: c45a0a56a001d4decb890df67a9d3577, type: 3}
-  - {fileID: 21300000, guid: 7a6b30c1896064b6289582b69ccdee08, type: 3}
-  - {fileID: 21300000, guid: 1d7abacee65bd4493b28dfb1b252ce95, type: 3}
-  - {fileID: 21300000, guid: 55d2b344899834fada2d994120bf2125, type: 3}
+  - {fileID: 21300000, guid: 793298adb4c0b5b40bd3d2c03b1bb730, type: 3}
+  _impactSprites:
+  - {fileID: 21300000, guid: 919eb1d3b51ce5d44843ac2ea9ca49f6, type: 3}
+  - {fileID: 21300000, guid: 411f80742902a3e4e9441f7a3ecd8b9c, type: 3}
+  - {fileID: 21300000, guid: 6f78dacdfad5efa44b0df446102b11e7, type: 3}
+  - {fileID: 21300000, guid: 6147d4550ed9022419b364ccfa7880ee, type: 3}
+  - {fileID: 21300000, guid: 346ae09a9a6875646912da8b59fc2a0c, type: 3}
+  _impactColors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.5019608, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0.67058825, a: 1}
   _cameraShake: {fileID: 0}
 --- !u!95 &8583931009016649432
 Animator:

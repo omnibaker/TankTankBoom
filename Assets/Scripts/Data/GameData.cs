@@ -53,7 +53,7 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// Increments battle up one unit update to next level if reach 10 battles
         /// </summary>
-        public void NextBattle()
+        public void NextBattle(ScoreData score)
         {
             GameData.CurrentBattle++;
             if (GameData.CurrentBattle % 10 == 0)
@@ -61,7 +61,7 @@ namespace Sumfulla.TankTankBoom
                 GameData.CurrentLevel++;
             }
 
-            PlayManager.I.Score.CalculateRewardMultiplier();
+            score.CalculateRewardMultiplier();
         }
 
         /// <summary>
@@ -130,12 +130,12 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// Updates score data, and various UI score elements
         /// </summary>
-        public void AddPoints(int points, bool useRewardMultiplier = true)
+        public void AddPoints(int points, UI_Play ui, ProgressData progress, bool useRewardMultiplier = true)
         {
             int pointsIncrease = Mathf.RoundToInt(points * (useRewardMultiplier ? RewardMultiplier : 1f));
             CurrentScore += pointsIncrease;
-            PlayManager.I.UIPlay.SetScoreLabel(CurrentScore.ToString());
-            PlayManager.I.Progress.RunMilestoneCheck(pointsIncrease);
+            ui.SetScoreLabel(CurrentScore.ToString());
+            progress.RunMilestoneCheck(pointsIncrease);
         }
 
         /// <summary>

@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 namespace Sumfulla.TankTankBoom
 {
+    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(LineRenderer))]
     public class EnemyTank : MonoBehaviour, IExplodableEnemy
     {
-        private const int MAX_ENEMY_HEALTH = 4;
-        private int _tankHealth = MAX_ENEMY_HEALTH;
+        private const int MAX_SHIELD_DAMAGE = 4;
 
-#pragma warning disable 0649
         [SerializeField] private GameObject _projectilePF = null;
         [SerializeField] private SpriteRenderer _damageState = null;
         [SerializeField] private SpriteRenderer _tankState = null;
@@ -25,7 +24,9 @@ namespace Sumfulla.TankTankBoom
         [SerializeField] private bool _userInputAngle = false;
         [SerializeField] private float _gunAngle = 145f;
         [SerializeField] private float _roomForError = 0.03f;
-#pragma warning restore 0649
+        [SerializeField] private int _shieldDamage;
+
+        public PlayManager PlayMgr { get; set; }
 
         private float _trackedInputAngle;
         private float _difficulty = 1f;
@@ -45,30 +46,37 @@ namespace Sumfulla.TankTankBoom
         private Color _lrColor;
         private Color _lrColorFaded;
 
-        private float _timeSinceLastShot = 10f; // TODO: Testing, return to 0/null when done
+        private float _timeSinceLastShot = 0;
 
         [Header("HEALTH")]
-        [SerializeField] private Color[] ShieldColors;
-        public Sprite[] StateSprites;
-        public Sprite[] ShieldSprites;
-        public CameraShaker _cameraShake;
+        [SerializeField] private Sprite[] _stateSprites;
+        [SerializeField] private Sprite[] _impactSprites;
+        [SerializeField] private Color[] _impactColors;
 
         private void Awake()
         {
             _animator = GetComponent<Animator>();
             _lineRenderer = GetComponent<LineRenderer>();
-            _tankState = GetComponent<SpriteRenderer>();
             _rb = GetComponent<Rigidbody2D>();
+
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in EnemyTank");
+                }
+            }
         }
 
         private void Start()
         {
-            _tankHealth = MAX_ENEMY_HEALTH;
-            _lrMaterial = _lineRenderer.material;
-            _lrColor = _lineRenderer.material.color;
+            _lrMaterial = _lineRenderer.sharedMaterial;
+            _lrColor = _lineRenderer.sharedMaterial.color;
             _lrColorFaded = new Color(_lrColor.r, _lrColor.g, _lrColor.b, 0);
-            _damageState.color = ShieldColors[ShieldColors.Length - 1];
-            _barrelState.color = ShieldColors[ShieldColors.Length - 1];
+            _damageState.color = _impactColors[_impactColors.Length - 1];
+            _barrelState.color = _impactColors[_impactColors.Length - 1];
 
             SetLayerMasks();
             StartCoroutine(KeepShooting());
@@ -78,7 +86,7 @@ namespace Sumfulla.TankTankBoom
         private void Update()
         {
             UpdateAngle();
-            if (PlayManager.I.State.Current == RunState.PLAY)
+            if (PlayMgr.State.Current == RunState.PLAY)
             {
                 TimedShooting();
             }
@@ -86,17 +94,14 @@ namespace Sumfulla.TankTankBoom
 
         private void OnEnable()
         {
-            PlayManager.I.State.OnPause += EnemyTankPaused;
-            PlayManager.I.State.OnUnpause += EnemyTankUnpaused;
+            PlayMgr.State.OnPause += EnemyTankPaused;
+            PlayMgr.State.OnUnpause += EnemyTankUnpaused;
         }
 
         private void OnDisable()
         {
-            if (PlayManager.IsInitialized)
-            {
-                PlayManager.I.State.OnPause -= EnemyTankPaused;
-                PlayManager.I.State.OnUnpause -= EnemyTankUnpaused;
-            }
+            PlayMgr.State.OnPause -= EnemyTankPaused;
+            PlayMgr.State.OnUnpause -= EnemyTankUnpaused;
         }
 
         /// <summary>
@@ -108,7 +113,7 @@ namespace Sumfulla.TankTankBoom
             {
                 //StartCoroutine(FindValidTrajectoryWithVisualArc());
                 FindValidTrajectoryInOneFrame();
-                 _timeSinceLastShot = 0;
+                _timeSinceLastShot = 0;
             }
             else
             {
@@ -220,7 +225,7 @@ namespace Sumfulla.TankTankBoom
                 yield return null;
             }
         }
-        
+
         /// <summary>
         /// Moves barrel and updates data panel with latest angle
         /// </summary>
@@ -235,67 +240,65 @@ namespace Sumfulla.TankTankBoom
                 }
             }
         }
-  
+
         /// <summary>
         /// Interface method to cause explosion
         /// </summary>
         public void InflictDamage()
         {
-            //if (ArtilleryManager.I.ReactiveBehaviour)
-            if (true)
+            _shieldDamage++;
+
+            if (_shieldDamage <= MAX_SHIELD_DAMAGE)
             {
-                if (_tankHealth > 0)
-                {
-                    GameAudio.I.Play(SoundType.TankHitNotDestroyed);
-                    GameAudio.I.Play(SoundType.GroundExplode01);
+                GameAudio.I.Play(SoundType.TankHitNotDestroyed);
+                GameAudio.I.Play(SoundType.GroundExplode01);
 
-                    // Drop current health
-                    _tankHealth--;
-                    GameLog.Say($"<color='green'>Enemy Tank Hit!</color>: <color='red'>{_tankHealth}</color>");
+                // Drop current health
+                GameLog.Say($"<color='green'>Enemy Tank Hit!</color>: <color='red'>{_shieldDamage}</color>");
 
-                    // Shield + Color
-                    int newDmgIndex = ShieldColors.Length - 1 - _tankHealth;
-                    _damageState.color = ShieldColors[newDmgIndex];
-                    _barrelState.color = ShieldColors[newDmgIndex];
-                    _damageState.sprite = ShieldSprites[newDmgIndex];
+                // Shield + Color
+                int newDmgIndex = _shieldDamage - 1;
+                _damageState.color = _impactColors[newDmgIndex];
+                _barrelState.color = _impactColors[newDmgIndex];
+                _damageState.sprite = _impactSprites[newDmgIndex];
 
-                    // State graphic
-                    int newStateIndex = StateSprites.Length - 2 - _tankHealth;
-                    _tankState.sprite = StateSprites[newStateIndex];
+                // State graphic
+                _tankState.sprite = _stateSprites[newDmgIndex];
 
-                    TriggerDamageGlow();
+                TriggerDamageGlow();
 
-                    PlayManager.I.Score.AddPoints(GameRef.Points.TANK_HIT);
-                    //ArtilleryManager.I.AddGamePlayPoints(ArtilleryEnemies.POINT_TANK_HIT);
-                    //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_TANK_HIT, transform.position, Color.green);
-                }
-                else
-                {
-                    GameAudio.I.Play(SoundType.MachineExplode);
-                    
-                    Explode();
-                }
+                PlayMgr.Score.AddPoints(GameRef.Points.TANK_HIT, PlayMgr.UIPlay, PlayMgr.Progress);
+                //ArtilleryManager.I.AddGamePlayPoints(ArtilleryEnemies.POINT_TANK_HIT);
+                //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_TANK_HIT, transform.position, Color.green);
+            }
+            else
+            {
+                GameAudio.I.Play(SoundType.MachineExplode);
+                ;
+                Explode();
+                TriggerDamageGlow(true);
             }
         }
 
         /// <summary>
         /// Triggers coroutine which displays shield sprites, stops any previous coroyutine run
         /// </summary>
-        internal virtual void TriggerDamageGlow()
+        private void TriggerDamageGlow(bool isFinal = false)
         {
             _damageState.gameObject.SetActive(true);
-            _barrelState.gameObject.SetActive(true);
+            if (!isFinal) _barrelState.gameObject.SetActive(true);
             if (_hitFading != null)
             {
                 StopCoroutine(_hitFading);
                 _hitFading = null;
             }
-            _hitFading = StartCoroutine(FadeHitIndicator());
+            _hitFading = StartCoroutine(FadeHitIndicator(isFinal));
         }
+
         /// <summary>
         /// Coroutine that displays shield sprites and fades out color property upon impact
         /// </summary>
-        public IEnumerator FadeHitIndicator()
+        private IEnumerator FadeHitIndicator(bool isFinal)
         {
             Color shieldColor = _damageState.color;
             float t = 0;
@@ -303,8 +306,8 @@ namespace Sumfulla.TankTankBoom
             while (t <= 1f)
             {
                 _damageState.color = new Color(shieldColor.r, shieldColor.g, shieldColor.b, Mathf.Lerp(1f, 0, t));
-                _barrelState.color = new Color(shieldColor.r, shieldColor.g, shieldColor.b, Mathf.Lerp(1f, 0, t));
-                t += Time.deltaTime;
+                if (!isFinal) _barrelState.color = new Color(shieldColor.r, shieldColor.g, shieldColor.b, Mathf.Lerp(1f, 0, t));
+                t += Time.deltaTime * 2f;
                 yield return null;
             }
 
@@ -312,11 +315,11 @@ namespace Sumfulla.TankTankBoom
             _damageState.gameObject.SetActive(false);
             _barrelState.gameObject.SetActive(false);
         }
-        
+
         /// <summary>
         /// Create projectile and starts process of firing it on current trajectory
         /// </summary>
-        public void FireProjectile(float blastForce = 0)
+        private void FireProjectile(float blastForce = 0)
         {
             Vector3 instantiatedPosition = _angleVisual.position + _angleVisual.right;
             GameObject projectile = Instantiate(_projectilePF, instantiatedPosition, _angleVisual.rotation);
@@ -329,7 +332,7 @@ namespace Sumfulla.TankTankBoom
 
             MakeTrajectoryTemporarilyVisible();
         }
-        
+
         /// <summary>
         /// Adjusts accuracy of enemy firing projection so not always direct hit
         /// </summary>
@@ -340,7 +343,7 @@ namespace Sumfulla.TankTankBoom
             force *= _difficulty;
             force *= errorAdjustment + 1;
         }
-        
+
         /// <summary>
         /// Trigger trajectory visiblity fade out coroutine
         /// </summary>
@@ -352,7 +355,7 @@ namespace Sumfulla.TankTankBoom
             }
             _fadeOutTrajectory = StartCoroutine(SlowlyFadeOutTrajectory());
         }
-        
+
         /// <summary>
         /// Displays line renderer tragectory display, then fades out over given duration
         /// </summary>
@@ -402,30 +405,27 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void DisableNonExplodingParts()
         {
-            _damageState.enabled = false;
-            _tankState.enabled = false;
-            _flag.SetActive(false);
-            _barrel.SetActive(false);
-            if(TryGetComponent(out BoxCollider2D bc))
+            if (TryGetComponent(out BoxCollider2D bc))
             {
                 bc.enabled = false;
             }
             Destroy(_rb);
         }
-        
+
         /// <summary>
         /// Interface method to cause explosion and adds points for kill
         /// </summary>
         public void Explode()
         {
-            PlayManager.I.State.Pause();
-            PlayManager.I.Score.AddPoints(GameRef.Points.TANK_KILL);
+            PlayMgr.State.Pause();
+            PlayMgr.Score.AddPoints(GameRef.Points.TANK_KILL, PlayMgr.UIPlay, PlayMgr.Progress);
 
             StopAllCoroutines();
+            DisplayAsDestroyed();
             DisableNonExplodingParts();
 
             _explosion.SetActive(true);
-            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
 
             //ArtilleryManager.I.AddGamePlayPoints(ArtilleryEnemies.POINT_TANK_KILL);
             //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_TANK_KILL, transform.position, _killColor);
@@ -434,16 +434,29 @@ namespace Sumfulla.TankTankBoom
         }
 
         /// <summary>
+        /// Updates enemy tank's properties to reflect final stage of destruction
+        /// </summary>
+        private void DisplayAsDestroyed()
+        {
+            int newDamageIndex = _shieldDamage - 1;
+            _tankState.sprite = _stateSprites[newDamageIndex];
+            _damageState.color = _impactColors[newDamageIndex];
+            _damageState.sprite = _impactSprites[newDamageIndex];
+            _flag.SetActive(false);
+            _barrel.SetActive(false);
+        }
+
+        /// <summary>
         /// Interface method to stop exploding animation and remove object
         /// </summary>
         public void Die()
         {
-            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, false);
+            _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, false);
             _explosion.SetActive(false);
-            PlayManager.I.OnEnemyTankDestroyed();
+            PlayMgr.OnEnemyTankDestroyed();
             Destroy(gameObject);
         }
-        
+
         /// <summary>
         /// Behaviours to stop when game is paused
         /// </summary>
@@ -455,13 +468,9 @@ namespace Sumfulla.TankTankBoom
                 _rb.gravityScale = 0;
                 _rb.bodyType = RigidbodyType2D.Static;
             }
-            else
-            {
-                GameLog.Say("PAUSE - Would normally error here");
-            }
             GetComponent<BoxCollider2D>().enabled = true;
         }
-        
+
         /// <summary>
         /// Behaviours to restart when game is unpaused
         /// </summary>

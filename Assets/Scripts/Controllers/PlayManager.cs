@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 namespace Sumfulla.TankTankBoom
 {
     [DefaultExecutionOrder(-1000)]
-    public class PlayManager : Singleton<PlayManager>
+    public class PlayManager: MonoBehaviour
     {
         [SerializeField] private GameObject _playerPF = null;
         [SerializeField] private Enemies _enemies;
@@ -43,13 +43,12 @@ namespace Sumfulla.TankTankBoom
 
         private void Awake()
         {
-            CreateInstance(this, gameObject);
             State.Pause();
         }
 
         private void Start()
         {
-            _cameraShaker = FindFirstObjectByType<CameraShaker>();
+            _cameraShaker = FindAnyObjectByType<CameraShaker>();
             ResetTimer();
             StartNewGame();
         }
@@ -65,7 +64,7 @@ namespace Sumfulla.TankTankBoom
 
         private void OnEnable()
         {
-            UIPlay = FindFirstObjectByType<UI_Play>();
+            UIPlay = FindAnyObjectByType<UI_Play>();
             UIPlay.OnAccuracyHeldEvent += FirePressed;
             UIPlay.OnAccuracyReleasedEvent += StopOscillateAccuracy;
             UIPlay.OnStrikeEvent += StrikeButtonPressed;
@@ -143,7 +142,7 @@ namespace Sumfulla.TankTankBoom
 
             // Create environment
             FindAnyObjectByType<SkyUpdater>()?.UpdateSky();
-            GameRef.Environment.GenerateNewWind();
+            GameRef.Environment.GenerateNewWind(Environment, UIPlay);
             yield return new WaitForSeconds(0.1f);
             _terrainController.CreateNewBattlefieldTerrain();
             yield return new WaitForSeconds(0.1f);
@@ -195,7 +194,7 @@ namespace Sumfulla.TankTankBoom
             AirSupport.EndSupport();
 
             // Battle progress points
-            Score.AddPoints(GameRef.Points.BATTLE_WON);
+            Score.AddPoints(GameRef.Points.BATTLE_WON, UIPlay, Progress);
 
             // Display Message
             PopUp pu = PopUp.InstantiatePopUp();
@@ -208,13 +207,13 @@ namespace Sumfulla.TankTankBoom
                 if (calc != null) StopCoroutine(calc);
 
                 // Add points to actual data
-                Score.AddPoints(points, false);
+                Score.AddPoints(points, UIPlay, Progress, false);
 
                 // Start new wave
-                Progress.NextBattle();
+                Progress.NextBattle(Score);
 
                 // Restart battle
-                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()));
+                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()), 0.5f);
                 
             }, "OK");
 
@@ -226,7 +225,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void BattleFailed(FailureReason reason)
         {
-            // Stop timer and player
+            // Stop timer and playser
             State.Pause();
 
             // Hide ready gauge
@@ -267,7 +266,7 @@ namespace Sumfulla.TankTankBoom
                 EnableTurnBasedFire();
 
                 // Restart battle
-                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()));
+                SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()), 0.5f);
 
             }, "HELL YEAH!");
 
@@ -275,7 +274,7 @@ namespace Sumfulla.TankTankBoom
             pu.AddButton(() =>
             {
                 // Exit to main menu
-                SceneController.I.GoToScene(GameRef.Scenes.MENU);
+                SceneController.I.GoToScene(GameRef.Scenes.MENU, 0.5f);
             }, "GOD, NO");
         }
 
@@ -338,7 +337,7 @@ namespace Sumfulla.TankTankBoom
                 EnableTurnBasedFire();
 
                 // Restart battle
-                SceneController.I.FadeOutIn(StartNewGame);
+                SceneController.I.FadeOutIn(StartNewGame, 0.5f);
 
             }, "HELL YEAH!");
 
@@ -346,7 +345,7 @@ namespace Sumfulla.TankTankBoom
             pu.AddButton(() =>
             {
                 // Exit to main menu
-                SceneController.I.GoToScene(GameRef.Scenes.MENU);
+                SceneController.I.GoToScene(GameRef.Scenes.MENU, 0.5f);
             }, "GOD NO");
 
         }
@@ -521,7 +520,7 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// When 'air strike' mission is completed, updates state properties and UI components
         /// </summary>
-        public void StrikeSuccesful()
+        public void StrikeSuccessful()
         {
             if (_strikeState == StrikeState.DROPPING)
             {
@@ -537,9 +536,11 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void StrikeButtonPressed()
         {
+            if (State.Current != RunState.PLAY) return;
+
             if (_strikeState == StrikeState.READY)
             {
-                AirSupport.LaunchStrikeFlyover();
+                AirSupport.LaunchStrikeFlyover(StrikeFlyoverEnded, StrikeSuccessful);
                 UIPlay.UpdateStrikeImage(GameUtils.UITK.GetUIIcon(GameRef.Textures.ICON_STRIKE__BOMB));
                 _strikeState = StrikeState.AIRBORNE;
             }
@@ -611,12 +612,12 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveAllAmmo()
         {
-            TankProjectile[] projectiles = FindObjectsByType<TankProjectile>(FindObjectsSortMode.None);
+            TankProjectile[] projectiles = FindObjectsByType<TankProjectile>();
             foreach (TankProjectile p in projectiles)
             {
                 p.Die();
             }
-            StrikeBomb[] bombs = FindObjectsByType<StrikeBomb>(FindObjectsSortMode.None);
+            StrikeBomb[] bombs = FindObjectsByType<StrikeBomb>();
             foreach (StrikeBomb b in bombs)
             {
                 b.Die();
@@ -630,7 +631,14 @@ namespace Sumfulla.TankTankBoom
         private TankPlayer CreatePlayer()
         {
             GameObject player = Instantiate(_playerPF, _terrainController.TankPositions.Tank, Quaternion.identity);
-            return player.GetComponent<TankPlayer>();
+
+            if (player.TryGetComponent(out TankPlayer tank))
+            {
+                tank.PlayMgr = this;
+                return tank;
+            }
+
+            return null;
         }
 
         /// <summary>

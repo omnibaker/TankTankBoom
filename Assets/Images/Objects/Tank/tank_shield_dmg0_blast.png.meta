@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c45a0a56a001d4decb890df67a9d3577
+guid: 919eb1d3b51ce5d44843ac2ea9ca49f6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3318764656183211809
-    second: tank_shield_dmg0_blast_0
+      213: 7224504092600219213
+    second: tank_shield_dmg0_blast_update_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tank_shield_dmg0_blast_0
+      name: tank_shield_dmg0_blast_update_0
       rect:
         serializedVersion: 2
-        x: 18
+        x: 17
         y: 0
-        width: 90
-        height: 74
+        width: 92
+        height: 75
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fd80417f02161f1d0800000000000000
-      internalID: -3318764656183211809
+      spriteID: d46bac5f138924460800000000000000
+      internalID: 7224504092600219213
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      tank_shield_dmg0_blast_0: -3318764656183211809
+      tank_shield_dmg0_blast_update_0: 7224504092600219213
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

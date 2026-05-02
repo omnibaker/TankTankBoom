@@ -13,6 +13,12 @@ namespace Sumfulla.TankTankBoom
 
         private EnemyTank _enemyTank;
         private bool _berserkerJumpToggle;
+        private PlayManager _playManager;
+
+        private void Awake()
+        {
+            _playManager = FindAnyObjectByType<PlayManager>();
+        }
 
         /// <summary>
         /// Triggers the next blimp countdown coroutine
@@ -46,7 +52,7 @@ namespace Sumfulla.TankTankBoom
             float timeToNewDrop = GameRef.Enemies.GetBerserkerFrequency();
             while (timeToNewDrop > 0)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (_playManager.State.Current == RunState.PLAY)
                 {
                     timeToNewDrop -= Time.deltaTime;
                 }
@@ -71,7 +77,7 @@ namespace Sumfulla.TankTankBoom
             float timeToNewDrop = GameRef.Enemies.GetBlimpFrequency();
             while (timeToNewDrop > 0)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (_playManager.State.Current == RunState.PLAY)
                 {
                     timeToNewDrop -= Time.deltaTime;
                 }
@@ -104,6 +110,7 @@ namespace Sumfulla.TankTankBoom
             GameObject enemyTank = Instantiate(_enemyPF, tankPosition, Quaternion.identity);
             if(enemyTank.TryGetComponent(out EnemyTank tank))
             {
+                tank.PlayMgr = _playManager;
                 _enemyTank = tank;
             }
         }
@@ -118,6 +125,7 @@ namespace Sumfulla.TankTankBoom
             GameObject blimpObject = Instantiate(_blimpPF, position, Quaternion.identity);
             if (blimpObject.TryGetComponent(out Blimp b))
             {
+                b.PlayMgr = _playManager;
                 b.OnBlimpDestroyedEvent += StartBlimp;
             }
         }
@@ -131,6 +139,7 @@ namespace Sumfulla.TankTankBoom
             GameObject berserkerDropper = Instantiate(_berserkerDropperPF, adjustZ, Quaternion.identity);
             if(berserkerDropper.TryGetComponent(out BerserkerDropper bd))
             {
+                bd.PlayMgr = _playManager;
                 StartCoroutine(bd.StartDescent());
             }
                 
@@ -152,7 +161,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveBerserkerDroppers()
         {
-            foreach (BerserkerDropper dropper in FindObjectsByType<BerserkerDropper>(FindObjectsSortMode.None))
+            foreach (BerserkerDropper dropper in FindObjectsByType<BerserkerDropper>())
             {
                 dropper.RemoveFromScene();
             }
@@ -163,7 +172,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveEnemyBlimps()
         {
-            foreach (Blimp blimp in FindObjectsByType<Blimp>(FindObjectsSortMode.None))
+            foreach (Blimp blimp in FindObjectsByType<Blimp>())
             {
                 blimp.RemoveFromScene();
             }
@@ -174,7 +183,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void RemoveBerserkers()
         {
-            foreach (Berserker berserker in FindObjectsByType<Berserker>(FindObjectsSortMode.None))
+            foreach (Berserker berserker in FindObjectsByType<Berserker>())
             {
                 berserker.RemoveFromScene();
             }

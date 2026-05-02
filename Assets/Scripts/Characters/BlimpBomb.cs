@@ -5,6 +5,20 @@ namespace Sumfulla.TankTankBoom
     public class BlimpBomb : MonoBehaviour
     {
         private float _speed = 2f;
+        public PlayManager PlayMgr { get; set; }
+
+        private void Awake()
+        {
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in BlimpBomb");
+                }
+            }
+        }
 
         private void Update()
         {
@@ -19,7 +33,7 @@ namespace Sumfulla.TankTankBoom
                 {
                     player.InflictDamage();
                 }
-                PlayManager.I.CameraShake();
+                PlayMgr.CameraShake();
                 _speed = 0.5f;
             }
             else
@@ -31,7 +45,7 @@ namespace Sumfulla.TankTankBoom
             // Set explosion animation
             if(TryGetComponent(out Animator anim))
             {
-                anim.SetBool(GameRef.AnimationTags.READY_TO_EXLODE, true);
+                anim.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
             }
             else
             {
@@ -44,7 +58,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private void DropToGround()
         {
-            if (PlayManager.I.State.Current == RunState.PAUSED) return;
+            if (PlayMgr.State.Current == RunState.PAUSED) return;
          
             transform.position = transform.position + _speed * Time.deltaTime * Vector3.down;
         }

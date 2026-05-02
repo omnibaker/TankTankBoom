@@ -25,7 +25,17 @@ namespace Sumfulla.TankTankBoom
         private Vector3 _pushBG;
         private Transform[] _cloudGroupsFG;
         private Transform[] _cloudGroupsBG;
+        private PlayManager _playManager;
 
+
+        private void Awake()
+        {
+            _playManager = FindAnyObjectByType<PlayManager>();
+            if (_playManager == null)
+            {
+                GameLog.Warn("PlayManager not assigned in SlowReelClouds");
+            }
+        }
         private void Start()
         {
             _widthHalf = WIDTH * 0.5f;
@@ -43,7 +53,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private void MoveClouds()
         {
-            if (PlayManager.I.State.Current == RunState.PAUSED) return;
+            if (_playManager.State.Current == RunState.PAUSED) return;
 
             float dt = Time.deltaTime;
 
@@ -108,8 +118,8 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void UpdatePush()
         {
-            _pushFG = 0.7f * PlayManager.I.Environment.Wind * Vector3.right;
-            _pushBG = 0.3f * PlayManager.I.Environment.Wind * Vector3.right;
+            _pushFG = 0.7f * _playManager.Environment.Wind * Vector3.right;
+            _pushBG = 0.3f * _playManager.Environment.Wind * Vector3.right;
         }
 
         /// <summary>

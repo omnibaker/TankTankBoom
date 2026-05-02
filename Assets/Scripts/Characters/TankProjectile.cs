@@ -13,9 +13,24 @@ namespace Sumfulla.TankTankBoom
         private Vector3 _velocityWhenPaused;
         private bool _triggered;
 
+        public PlayManager PlayMgr { get; set; }
+
+        private void Awake()
+        {
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in TankProjectile");
+                }
+            }
+        }
+
         private void Update()
         {
-            if (PlayManager.I.State.Current == RunState.PLAY && _airborne)
+            if (PlayMgr.State.Current == RunState.PLAY && _airborne)
             {
                 if (_windAffected)
                 {
@@ -27,17 +42,14 @@ namespace Sumfulla.TankTankBoom
 
         private void OnEnable()
         {
-            PlayManager.I.State.OnPause += ProjectilePaused;
-            PlayManager.I.State.OnUnpause += ProjectileUnpaused;
+            PlayMgr.State.OnPause += ProjectilePaused;
+            PlayMgr.State.OnUnpause += ProjectileUnpaused;
         }
 
         private void OnDisable()
         {
-            if (PlayManager.IsInitialized)
-            {
-                PlayManager.I.State.OnPause -= ProjectilePaused;
-                PlayManager.I.State.OnUnpause -= ProjectileUnpaused;
-            }
+            PlayMgr.State.OnPause -= ProjectilePaused;
+            PlayMgr.State.OnUnpause -= ProjectileUnpaused;
         }
 
         private void OnTriggerEnter2D(Collider2D collider)
@@ -50,12 +62,12 @@ namespace Sumfulla.TankTankBoom
                     if(!_triggered)
                     {
                         explodable.InflictDamage();
-                        PlayManager.I.CameraShake();
+                        PlayMgr.CameraShake();
                         _triggered = true;
                     }
                     else
                     {
-                        Debug.LogError("Has already been triggered!");
+                        GameLog.Warn($"Projectile contact has already been triggered [{collider.gameObject.name}]");
                     }
 
                 }
@@ -68,12 +80,12 @@ namespace Sumfulla.TankTankBoom
                     if(!_triggered)
                     {
                         tp.InflictDamage();
-                        PlayManager.I.CameraShake();
+                        PlayMgr.CameraShake();
                         _triggered = true;
                     }
                     else
                     {
-                        Debug.LogError("Has already been triggered!");
+                        GameLog.Warn($"Projectile contact has already been triggered [{collider.gameObject.name}]");
                     }
                 }
             }
@@ -145,7 +157,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private void AddWindResistance()
         {
-            _rb.linearVelocity += Vector2.right * PlayManager.I.Environment.Wind * Time.deltaTime;
+            _rb.linearVelocity += Vector2.right * PlayMgr.Environment.Wind * Time.deltaTime;
         }
 
         /// <summary>
@@ -183,7 +195,7 @@ namespace Sumfulla.TankTankBoom
 
             while (t < 7f)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (PlayMgr.State.Current == RunState.PLAY)
                 {
                     t += Time.deltaTime;
                 }
