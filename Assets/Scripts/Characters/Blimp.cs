@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Sumfulla.TankTankBoom
@@ -19,10 +20,26 @@ namespace Sumfulla.TankTankBoom
         private float _speed = 1f;
         private bool _bombDropped;
         private float _secondScanner;
+        public PlayManager PlayMgr { get; set; }
+
+        private void Awake()
+        {
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in Blimp");
+                }
+            }
+        }
+
+        
 
         private void Update()
         {
-            if (PlayManager.I.State.Current == RunState.PLAY)
+            if (PlayMgr.State.Current == RunState.PLAY)
             {
                 MoveLeft();
                 ScanForPlayer();
@@ -31,6 +48,7 @@ namespace Sumfulla.TankTankBoom
 
         private void Start()
         {
+
             _player = FindAnyObjectByType<TankPlayer>();
             _startPoint = new Vector3(Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x + OFFSCREEN_OFFSET, transform.position.y, Camera.main.nearClipPlane);
             _endPointX = Camera.main.ScreenToWorldPoint(Vector3.zero).x - OFFSCREEN_OFFSET;
@@ -41,7 +59,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private void MoveLeft()
         {
-            if (PlayManager.I.State.Current == RunState.PAUSED) return;
+            if (PlayMgr.State.Current == RunState.PAUSED) return;
 
             // Reset to start on the right if reached left end point
             if (transform.position.x < _endPointX)
@@ -60,7 +78,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         private void ScanForPlayer()
         {
-            if (PlayManager.I.State.Current == RunState.PAUSED) return;
+            if (PlayMgr.State.Current == RunState.PAUSED) return;
 
             // Only scan once every half-second
             if (_secondScanner < 0.5f)
@@ -99,7 +117,7 @@ namespace Sumfulla.TankTankBoom
         {
             GameAudio.I.Play(SoundType.MachineExplode);
 
-            PlayManager.I.Score.AddPoints(GameRef.Points.BLIMP_KILL);
+            PlayMgr.Score.AddPoints(GameRef.Points.BLIMP_KILL, PlayMgr.UIPlay, PlayMgr.Progress);
             if(TryGetComponent(out Animator animator))
             {
                 animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, true);
@@ -137,8 +155,11 @@ namespace Sumfulla.TankTankBoom
 
             if (!_bombDropped)
             {
-                Instantiate(_bombPF, new Vector3(_player.transform.position.x, _bombDropPoint.position.y, Camera.main.nearClipPlane), Quaternion.identity); ;
-
+                GameObject bombObject = Instantiate(_bombPF, new Vector3(_player.transform.position.x, _bombDropPoint.position.y, Camera.main.nearClipPlane), Quaternion.identity); ;
+                if (bombObject.TryGetComponent(out BlimpBomb bb))
+                {
+                    bb.PlayMgr = PlayMgr;
+                }
                 GameAudio.I.Play(SoundType.BombDropping);
             }
             _bombDropped = true;

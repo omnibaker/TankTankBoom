@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 namespace Sumfulla.TankTankBoom
 {
     [DefaultExecutionOrder(-1000)]
-    public class PlayManager : Singleton<PlayManager>
+    public class PlayManager: MonoBehaviour
     {
         [SerializeField] private GameObject _playerPF = null;
         [SerializeField] private Enemies _enemies;
@@ -43,7 +43,6 @@ namespace Sumfulla.TankTankBoom
 
         private void Awake()
         {
-            CreateInstance(this, gameObject);
             State.Pause();
         }
 
@@ -143,7 +142,7 @@ namespace Sumfulla.TankTankBoom
 
             // Create environment
             FindAnyObjectByType<SkyUpdater>()?.UpdateSky();
-            GameRef.Environment.GenerateNewWind();
+            GameRef.Environment.GenerateNewWind(Environment, UIPlay);
             yield return new WaitForSeconds(0.1f);
             _terrainController.CreateNewBattlefieldTerrain();
             yield return new WaitForSeconds(0.1f);
@@ -195,7 +194,7 @@ namespace Sumfulla.TankTankBoom
             AirSupport.EndSupport();
 
             // Battle progress points
-            Score.AddPoints(GameRef.Points.BATTLE_WON);
+            Score.AddPoints(GameRef.Points.BATTLE_WON, UIPlay, Progress);
 
             // Display Message
             PopUp pu = PopUp.InstantiatePopUp();
@@ -208,10 +207,10 @@ namespace Sumfulla.TankTankBoom
                 if (calc != null) StopCoroutine(calc);
 
                 // Add points to actual data
-                Score.AddPoints(points, false);
+                Score.AddPoints(points, UIPlay, Progress, false);
 
                 // Start new wave
-                Progress.NextBattle();
+                Progress.NextBattle(Score);
 
                 // Restart battle
                 SceneController.I.FadeOutIn(() => StartCoroutine(StartNewBattle()), 0.5f);
@@ -541,7 +540,7 @@ namespace Sumfulla.TankTankBoom
 
             if (_strikeState == StrikeState.READY)
             {
-                AirSupport.LaunchStrikeFlyover();
+                AirSupport.LaunchStrikeFlyover(StrikeFlyoverEnded, StrikeSuccessful);
                 UIPlay.UpdateStrikeImage(GameUtils.UITK.GetUIIcon(GameRef.Textures.ICON_STRIKE__BOMB));
                 _strikeState = StrikeState.AIRBORNE;
             }
@@ -632,7 +631,14 @@ namespace Sumfulla.TankTankBoom
         private TankPlayer CreatePlayer()
         {
             GameObject player = Instantiate(_playerPF, _terrainController.TankPositions.Tank, Quaternion.identity);
-            return player.GetComponent<TankPlayer>();
+
+            if (player.TryGetComponent(out TankPlayer tank))
+            {
+                tank.PlayMgr = this;
+                return tank;
+            }
+
+            return null;
         }
 
         /// <summary>

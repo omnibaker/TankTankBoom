@@ -13,6 +13,12 @@ namespace Sumfulla.TankTankBoom
 
         private EnemyTank _enemyTank;
         private bool _berserkerJumpToggle;
+        private PlayManager _playManager;
+
+        private void Awake()
+        {
+            _playManager = FindAnyObjectByType<PlayManager>();
+        }
 
         /// <summary>
         /// Triggers the next blimp countdown coroutine
@@ -46,7 +52,7 @@ namespace Sumfulla.TankTankBoom
             float timeToNewDrop = GameRef.Enemies.GetBerserkerFrequency();
             while (timeToNewDrop > 0)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (_playManager.State.Current == RunState.PLAY)
                 {
                     timeToNewDrop -= Time.deltaTime;
                 }
@@ -71,7 +77,7 @@ namespace Sumfulla.TankTankBoom
             float timeToNewDrop = GameRef.Enemies.GetBlimpFrequency();
             while (timeToNewDrop > 0)
             {
-                if (PlayManager.I.State.Current == RunState.PLAY)
+                if (_playManager.State.Current == RunState.PLAY)
                 {
                     timeToNewDrop -= Time.deltaTime;
                 }
@@ -104,6 +110,7 @@ namespace Sumfulla.TankTankBoom
             GameObject enemyTank = Instantiate(_enemyPF, tankPosition, Quaternion.identity);
             if(enemyTank.TryGetComponent(out EnemyTank tank))
             {
+                tank.PlayMgr = _playManager;
                 _enemyTank = tank;
             }
         }
@@ -118,6 +125,7 @@ namespace Sumfulla.TankTankBoom
             GameObject blimpObject = Instantiate(_blimpPF, position, Quaternion.identity);
             if (blimpObject.TryGetComponent(out Blimp b))
             {
+                b.PlayMgr = _playManager;
                 b.OnBlimpDestroyedEvent += StartBlimp;
             }
         }
@@ -131,6 +139,7 @@ namespace Sumfulla.TankTankBoom
             GameObject berserkerDropper = Instantiate(_berserkerDropperPF, adjustZ, Quaternion.identity);
             if(berserkerDropper.TryGetComponent(out BerserkerDropper bd))
             {
+                bd.PlayMgr = _playManager;
                 StartCoroutine(bd.StartDescent());
             }
                 

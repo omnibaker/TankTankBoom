@@ -26,6 +26,8 @@ namespace Sumfulla.TankTankBoom
         [SerializeField] private float _roomForError = 0.03f;
         [SerializeField] private int _shieldDamage;
 
+        public PlayManager PlayMgr { get; set; }
+
         private float _trackedInputAngle;
         private float _difficulty = 1f;
         private float _projectileMass = 1f;
@@ -56,6 +58,16 @@ namespace Sumfulla.TankTankBoom
             _animator = GetComponent<Animator>();
             _lineRenderer = GetComponent<LineRenderer>();
             _rb = GetComponent<Rigidbody2D>();
+
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in EnemyTank");
+                }
+            }
         }
 
         private void Start()
@@ -74,7 +86,7 @@ namespace Sumfulla.TankTankBoom
         private void Update()
         {
             UpdateAngle();
-            if (PlayManager.I.State.Current == RunState.PLAY)
+            if (PlayMgr.State.Current == RunState.PLAY)
             {
                 TimedShooting();
             }
@@ -82,17 +94,14 @@ namespace Sumfulla.TankTankBoom
 
         private void OnEnable()
         {
-            PlayManager.I.State.OnPause += EnemyTankPaused;
-            PlayManager.I.State.OnUnpause += EnemyTankUnpaused;
+            PlayMgr.State.OnPause += EnemyTankPaused;
+            PlayMgr.State.OnUnpause += EnemyTankUnpaused;
         }
 
         private void OnDisable()
         {
-            if (PlayManager.IsInitialized)
-            {
-                PlayManager.I.State.OnPause -= EnemyTankPaused;
-                PlayManager.I.State.OnUnpause -= EnemyTankUnpaused;
-            }
+            PlayMgr.State.OnPause -= EnemyTankPaused;
+            PlayMgr.State.OnUnpause -= EnemyTankUnpaused;
         }
 
         /// <summary>
@@ -104,7 +113,7 @@ namespace Sumfulla.TankTankBoom
             {
                 //StartCoroutine(FindValidTrajectoryWithVisualArc());
                 FindValidTrajectoryInOneFrame();
-                 _timeSinceLastShot = 0;
+                _timeSinceLastShot = 0;
             }
             else
             {
@@ -216,7 +225,7 @@ namespace Sumfulla.TankTankBoom
                 yield return null;
             }
         }
-        
+
         /// <summary>
         /// Moves barrel and updates data panel with latest angle
         /// </summary>
@@ -248,7 +257,7 @@ namespace Sumfulla.TankTankBoom
                 GameLog.Say($"<color='green'>Enemy Tank Hit!</color>: <color='red'>{_shieldDamage}</color>");
 
                 // Shield + Color
-                int newDmgIndex = _shieldDamage-1;
+                int newDmgIndex = _shieldDamage - 1;
                 _damageState.color = _impactColors[newDmgIndex];
                 _barrelState.color = _impactColors[newDmgIndex];
                 _damageState.sprite = _impactSprites[newDmgIndex];
@@ -258,14 +267,14 @@ namespace Sumfulla.TankTankBoom
 
                 TriggerDamageGlow();
 
-                PlayManager.I.Score.AddPoints(GameRef.Points.TANK_HIT);
+                PlayMgr.Score.AddPoints(GameRef.Points.TANK_HIT, PlayMgr.UIPlay, PlayMgr.Progress);
                 //ArtilleryManager.I.AddGamePlayPoints(ArtilleryEnemies.POINT_TANK_HIT);
                 //ArtilleryManager.I.Points.CreateTextObject(ArtilleryEnemies.POINT_TANK_HIT, transform.position, Color.green);
             }
             else
             {
                 GameAudio.I.Play(SoundType.MachineExplode);
-;
+                ;
                 Explode();
                 TriggerDamageGlow(true);
             }
@@ -277,7 +286,7 @@ namespace Sumfulla.TankTankBoom
         private void TriggerDamageGlow(bool isFinal = false)
         {
             _damageState.gameObject.SetActive(true);
-            if(!isFinal) _barrelState.gameObject.SetActive(true);
+            if (!isFinal) _barrelState.gameObject.SetActive(true);
             if (_hitFading != null)
             {
                 StopCoroutine(_hitFading);
@@ -323,7 +332,7 @@ namespace Sumfulla.TankTankBoom
 
             MakeTrajectoryTemporarilyVisible();
         }
-        
+
         /// <summary>
         /// Adjusts accuracy of enemy firing projection so not always direct hit
         /// </summary>
@@ -334,7 +343,7 @@ namespace Sumfulla.TankTankBoom
             force *= _difficulty;
             force *= errorAdjustment + 1;
         }
-        
+
         /// <summary>
         /// Trigger trajectory visiblity fade out coroutine
         /// </summary>
@@ -346,7 +355,7 @@ namespace Sumfulla.TankTankBoom
             }
             _fadeOutTrajectory = StartCoroutine(SlowlyFadeOutTrajectory());
         }
-        
+
         /// <summary>
         /// Displays line renderer tragectory display, then fades out over given duration
         /// </summary>
@@ -396,20 +405,20 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void DisableNonExplodingParts()
         {
-            if(TryGetComponent(out BoxCollider2D bc))
+            if (TryGetComponent(out BoxCollider2D bc))
             {
                 bc.enabled = false;
             }
             Destroy(_rb);
         }
-        
+
         /// <summary>
         /// Interface method to cause explosion and adds points for kill
         /// </summary>
         public void Explode()
         {
-            PlayManager.I.State.Pause();
-            PlayManager.I.Score.AddPoints(GameRef.Points.TANK_KILL);
+            PlayMgr.State.Pause();
+            PlayMgr.Score.AddPoints(GameRef.Points.TANK_KILL, PlayMgr.UIPlay, PlayMgr.Progress);
 
             StopAllCoroutines();
             DisplayAsDestroyed();
@@ -444,10 +453,10 @@ namespace Sumfulla.TankTankBoom
         {
             _animator.SetBool(GameRef.AnimationTags.READY_TO_EXPLODE, false);
             _explosion.SetActive(false);
-            PlayManager.I.OnEnemyTankDestroyed();
+            PlayMgr.OnEnemyTankDestroyed();
             Destroy(gameObject);
         }
-        
+
         /// <summary>
         /// Behaviours to stop when game is paused
         /// </summary>
@@ -459,13 +468,9 @@ namespace Sumfulla.TankTankBoom
                 _rb.gravityScale = 0;
                 _rb.bodyType = RigidbodyType2D.Static;
             }
-            else
-            {
-                GameLog.Say("PAUSE - Would normally error here");
-            }
             GetComponent<BoxCollider2D>().enabled = true;
         }
-        
+
         /// <summary>
         /// Behaviours to restart when game is unpaused
         /// </summary>

@@ -25,11 +25,22 @@ namespace Sumfulla.TankTankBoom
         private float _curAngle;
         private float _vel;
         private float _projectileMass;
+        private PlayManager PlayMgr;
 
         private void Awake()
         {
             _lineRenderer = GetComponent<LineRenderer>();
             _projectileMass = _projectilePF.GetComponent<Rigidbody2D>().mass;
+
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in Berserker");
+                }
+            }
         }
 
         private void Start()
@@ -37,26 +48,23 @@ namespace Sumfulla.TankTankBoom
             _lrMaterial = _lineRenderer.material;
             _lrColor = _lineRenderer.material.color;
             _lrColorFaded = new Color(_lrColor.r, _lrColor.g, _lrColor.b, 0);
-            UpdateAngle(PlayManager.I.UIPlay.Angle);
+            UpdateAngle(PlayMgr.UIPlay.Angle);
         }
 
         private void OnEnable()
         {
-            PlayManager.I.UIPlay.OnAngleChangeEvent += UpdateAngle;
-            PlayManager.I.UIPlay.OnAnyChangeEvent += DrawTrajectory;
-            PlayManager.I.OnStandardFireEvent += FireProjectile;
-            PlayManager.I.OnRapidFireEvent += FireProjectile;
+            PlayMgr.UIPlay.OnAngleChangeEvent += UpdateAngle;
+            PlayMgr.UIPlay.OnAnyChangeEvent += DrawTrajectory;
+            PlayMgr.OnStandardFireEvent += FireProjectile;
+            PlayMgr.OnRapidFireEvent += FireProjectile;
         }
 
         private void OnDisable()
         {
-            if (PlayManager.IsInitialized)
-            {
-                PlayManager.I.UIPlay.OnAngleChangeEvent -= UpdateAngle;
-                PlayManager.I.UIPlay.OnAnyChangeEvent -= DrawTrajectory;
-                PlayManager.I.OnStandardFireEvent -= FireProjectile;
-                PlayManager.I.OnRapidFireEvent -= FireProjectile;
-            }
+            PlayMgr.UIPlay.OnAngleChangeEvent -= UpdateAngle;
+            PlayMgr.UIPlay.OnAnyChangeEvent -= DrawTrajectory;
+            PlayMgr.OnStandardFireEvent -= FireProjectile;
+            PlayMgr.OnRapidFireEvent -= FireProjectile;
         }
 
         /// <summary>
@@ -108,7 +116,7 @@ namespace Sumfulla.TankTankBoom
                 Vector3 instantiatedPosition = _cannon.position + _cannon.right;
                 GameObject projectile = Instantiate(_projectilePF, instantiatedPosition, Quaternion.identity);
                 float incrementalVariation = (variation + (i - amount / 2f)) / 10f;
-                Vector3 directionalForce = _cannon.right * (PlayManager.I.Player.CurrentPower + incrementalVariation * FORCE_FACTOR);
+                Vector3 directionalForce = _cannon.right * (PlayMgr.Player.CurrentPower + incrementalVariation * FORCE_FACTOR);
                 projectile.GetComponent<TankProjectile>().Initialize(directionalForce, true);
 
                 // Alternate firing sounds
@@ -130,20 +138,20 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void FireProjectile(float variation)
         {
-            if (PlayManager.I.Firing == FiringType.RAPID)
+            if (PlayMgr.Firing == FiringType.RAPID)
             {
                 StartCoroutine(RapidFireProjectile(variation));
 
-                if (--PlayManager.I.RapidFiresLeft <= 0)
+                if (--PlayMgr.RapidFiresLeft <= 0)
                 {
-                    PlayManager.I.EnableTurnBasedFire();
+                    PlayMgr.EnableTurnBasedFire();
                 }
             }
             else
             {
                 Vector3 instantiatedPosition = _cannon.position + _cannon.right;
                 GameObject projectile = Instantiate(_projectilePF, instantiatedPosition, Quaternion.identity);
-                Vector3 directionalForce = _cannon.right * (PlayManager.I.Player.CurrentPower + variation * FORCE_FACTOR);
+                Vector3 directionalForce = _cannon.right * (PlayMgr.Player.CurrentPower + variation * FORCE_FACTOR);
                 projectile.GetComponent<TankProjectile>().Initialize(directionalForce, true);
                 GameAudio.I.Play(SoundType.PlayerFire01);
             }
@@ -199,7 +207,7 @@ namespace Sumfulla.TankTankBoom
             Vector2 startPos = _cannon.position + _cannon.right;
 
             // Work out the projectile’s launch speed
-            _vel = PlayManager.I.Player.CurrentPower / _projectileMass * Time.fixedDeltaTime;
+            _vel = PlayMgr.Player.CurrentPower / _projectileMass * Time.fixedDeltaTime;
 
             for (int i = 0; i < maxSteps; ++i)
             {

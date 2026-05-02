@@ -7,6 +7,7 @@ namespace Sumfulla.TankTankBoom
 {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(TankCannon))]
     public class TankPlayer : MonoBehaviour
     {
         private const int MAX_SHIELD_DAMAGE = 4;
@@ -31,11 +32,25 @@ namespace Sumfulla.TankTankBoom
         private Coroutine _hitFading;
         private Animator _animator;
         private Rigidbody2D _rb;
+        private TankCannon _cannon;
+
+        public PlayManager PlayMgr { get; set; }
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
+            _cannon = GetComponent<TankCannon>();
+
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in TankPlayer");
+                }
+            }
         }
 
         /// <summary>
@@ -78,7 +93,7 @@ namespace Sumfulla.TankTankBoom
         /// </summary>
         public void InflictDamage()
         {
-            if (PlayManager.I.GodMode) return;
+            if (PlayMgr.GodMode) return;
 
             _shieldDamage++;
             GameLog.Say($"Player Hit! Damage={_shieldDamage} | Max{MAX_SHIELD_DAMAGE}");
@@ -86,7 +101,7 @@ namespace Sumfulla.TankTankBoom
             if (_shieldDamage > MAX_SHIELD_DAMAGE)
             {
                 GameAudio.I.Play(SoundType.MachineExplode);
-                PlayManager.I.State.Pause();
+                PlayMgr.State.Pause();
                 Explode();
                 TriggerDamageGlow(true);
             }
@@ -160,10 +175,7 @@ namespace Sumfulla.TankTankBoom
         {
             // Hide cannon/flag
             _flag.SetActive(false);
-            if(TryGetComponent(out TankCannon cannon))
-            {
-                cannon.HideCannon();
-            }
+            _cannon.HideCannon();
 
             // Updates player sprite
             _tankStateRenderer.sprite = _stateSprites[_shieldDamage - 1];
@@ -187,7 +199,7 @@ namespace Sumfulla.TankTankBoom
             _explosion.SetActive(false);
             //ArtilleryManager.I.LevelFailed(ArtilleryFailure.Destroyed);
 
-            PlayManager.I.BattleFailed(FailureReason.Destroyed);
+            PlayMgr.BattleFailed(FailureReason.Destroyed);
         }
     }
 

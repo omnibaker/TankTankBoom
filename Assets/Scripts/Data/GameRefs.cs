@@ -160,7 +160,7 @@ namespace Sumfulla.TankTankBoom
         {
             public const float WIND_RANGE = 2f;
 
-            public static void GenerateNewWind()
+            public static void GenerateNewWind(EnvironmentData envData, UI_Play ui)
             {
                 float rand = 0;
                 float windLimits = WIND_RANGE * GetWindLimit();
@@ -168,8 +168,8 @@ namespace Sumfulla.TankTankBoom
                 {
                     rand = Random.Range(-windLimits, windLimits);
                 }
-                PlayManager.I.Environment.Wind = rand;
-                PlayManager.I.UIPlay.SetWindLabel(PlayManager.I.Environment.Wind);
+                envData.Wind = rand;
+                ui.SetWindLabel(envData.Wind);
             }
 
             public static int GetTerrainProfileIndex()

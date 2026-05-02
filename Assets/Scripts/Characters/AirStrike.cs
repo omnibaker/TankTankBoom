@@ -15,7 +15,7 @@ namespace Sumfulla.TankTankBoom
         [Header("References")]
         [SerializeField] private GameObject _bombPf;
         [SerializeField] private Transform _bombDispatchPoint;
-        private List<GameObject> _spawnedBombs;
+        private List<GameObject> _spawnedBombs = new List<GameObject>();
 
         public bool BombsReleased { get { return _isComplete; } }
         private float _endX;

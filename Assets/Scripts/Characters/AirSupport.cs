@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Sumfulla.TankTankBoom
 {
@@ -14,7 +15,7 @@ namespace Sumfulla.TankTankBoom
         /// <summary>
         /// Public method to initiate an airstrike from AirStrike prefab
         /// </summary>
-        public void LaunchStrikeFlyover()
+        public void LaunchStrikeFlyover(Action<bool> strikeFlyoverEnded, Action strikeSuccessful)
         {
             Camera cam = Camera.main;
 
@@ -28,7 +29,7 @@ namespace Sumfulla.TankTankBoom
             if (plane.TryGetComponent(out AirStrike strike))
             {
                 _strike = strike;
-                _strike.Init(limitsEnd.x, PlayManager.I.StrikeFlyoverEnded, PlayManager.I.StrikeSuccessful);
+                _strike.Init(limitsEnd.x, strikeFlyoverEnded, strikeSuccessful);
             }
         }
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Sumfulla.TankTankBoom
 {
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Collider2D))]
     public class Berserker : MonoBehaviour, IExplodableEnemy
     {
         private const float MIN_JUMP = 40f;
@@ -16,6 +19,8 @@ namespace Sumfulla.TankTankBoom
         private Animator _animator;
         private Collider2D _collider;
 
+        public PlayManager PlayMgr { get; set; }
+
         private Vector2 _velocityWhenPaused = Vector2.zero;
         private bool _canRun;
 
@@ -24,6 +29,16 @@ namespace Sumfulla.TankTankBoom
             _rb = GetComponent<Rigidbody2D>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider2D>();
+
+            // Play manager failsafe
+            if (PlayMgr == null)
+            {
+                PlayMgr = FindAnyObjectByType<PlayManager>();
+                if (PlayMgr == null)
+                {
+                    GameLog.Warn("PlayManager not assigned in Berserker");
+                }
+            }
         }
 
         private void Start()
@@ -31,7 +46,7 @@ namespace Sumfulla.TankTankBoom
             EndBersekerRun();
             _runningLeft = StartCoroutine(RunLeft());
         }
-        
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.CompareTag(TagNames.PlayerTank.ToString()))
@@ -39,23 +54,20 @@ namespace Sumfulla.TankTankBoom
                 collision.gameObject.GetComponent<TankPlayer>().StopVelocity();
                 collision.gameObject.GetComponent<TankPlayer>().InflictDamage();
                 InflictDamage();
-                PlayManager.I.CameraShake();
+                PlayMgr.CameraShake();
             }
         }
-        
+
         private void OnEnable()
         {
-            PlayManager.I.State.OnPause += BerserkerPaused;
-            PlayManager.I.State.OnUnpause += BerserkerUnpaused;
+            PlayMgr.State.OnPause += BerserkerPaused;
+            PlayMgr.State.OnUnpause += BerserkerUnpaused;
         }
-        
+
         private void OnDisable()
         {
-            if (PlayManager.IsInitialized)
-            {
-                PlayManager.I.State.OnPause -= BerserkerPaused;
-                PlayManager.I.State.OnUnpause -= BerserkerUnpaused;
-            }
+            PlayMgr.State.OnPause -= BerserkerPaused;
+            PlayMgr.State.OnUnpause -= BerserkerUnpaused;
         }
 
         /// <summary>
@@ -71,7 +83,7 @@ namespace Sumfulla.TankTankBoom
             while (_canRun)
             {
                 // Only do logic when the game is actually running
-                if (PlayManager.I.State.Current != RunState.PLAY)
+                if (PlayMgr.State.Current != RunState.PLAY)
                 {
                     yield return null;
                     continue;
@@ -107,7 +119,7 @@ namespace Sumfulla.TankTankBoom
                         //Trigger ground explosion sound
                         if (forcedCount >= 3)
                         {
-                            bool jumpVariant = PlayManager.I.GetBerserkerNoise();
+                            bool jumpVariant = PlayMgr.GetBerserkerNoise();
                             GameAudio.I.Play(jumpVariant ? SoundType.BerserkerJump01 : SoundType.BerserkerJump02);
                         }
                         forcedCount++;
@@ -152,7 +164,7 @@ namespace Sumfulla.TankTankBoom
             GameAudio.I.Play(SoundType.MachineExplode);
 
             // Update score
-            PlayManager.I.Score.AddPoints(GameRef.Points.BERSERKER_KILL);
+            PlayMgr.Score.AddPoints(GameRef.Points.BERSERKER_KILL, PlayMgr.UIPlay, PlayMgr.Progress);
 
             // Stop 'run' coroutine and disable physical elements
             EndBersekerRun();
@@ -201,7 +213,7 @@ namespace Sumfulla.TankTankBoom
             {
                 // Record current velocity to momentum contionues when unpaused
                 _velocityWhenPaused = _rb.linearVelocity;
-                if(_rb.bodyType != RigidbodyType2D.Static)
+                if (_rb.bodyType != RigidbodyType2D.Static)
                 {
                     _rb.linearVelocity = Vector2.zero;
                 }

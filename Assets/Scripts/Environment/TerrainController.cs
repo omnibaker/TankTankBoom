@@ -32,6 +32,7 @@ namespace Sumfulla.TankTankBoom
         private TileTerrain _currentTileTerrain = TileTerrain.Random;
         private TerrainGenerator.PlatformPositions _platforms;
         private TerrainProfile _terrain;
+        private PlayManager _playManager;
         private bool _alternatingExplosion;
         private bool[,] _mappedArray;
         private float _gridCellSize;
@@ -44,6 +45,12 @@ namespace Sumfulla.TankTankBoom
 
         private void Start()
         {
+            _playManager = FindAnyObjectByType<PlayManager>();
+            if (_playManager == null)
+            {
+                GameLog.Warn("PlayManager not assigned in TerrainController");
+            }
+
             _gridCellSize = _grid.cellSize.x;
             _terrain = GetTerrainProfile();
         }
@@ -309,7 +316,7 @@ namespace Sumfulla.TankTankBoom
                 }
                 _alternatingExplosion = !_alternatingExplosion;
 
-                PlayManager.I.Score.AddPoints(GameRef.Points.DIRT_HIT);
+                _playManager.Score.AddPoints(GameRef.Points.DIRT_HIT, _playManager.UIPlay, _playManager.Progress);
                 // ArtilleryManager.I.AddGamePlayPoints(ArtilleryEnemies.POINT_DIRT_HIT);
 
                 //GameLog.Warn("TODO[TerrainController]: Make points appear for terrain hit");
