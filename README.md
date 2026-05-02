@@ -6,27 +6,46 @@ You control the trajectory of artillery fire against a rival tank. First to dest
 
 The terrain is generated randomly from various procedural methods. They are rendered using Unity's Tilemap system to create a block grid of tile elements which can be destroyed. The UI is created with UIToolkit using various bindings, templates and custom elements.
 
-<img width="360" height="270" alt="tank_000" src="https://github.com/user-attachments/assets/c18bc522-4ab9-4de3-aec1-cb8fddd81df6" />
+<p align="center">
+   <img width="45%" alt="tank_000" src="https://github.com/user-attachments/assets/c18bc522-4ab9-4de3-aec1-cb8fddd81df6" />
+      &nbsp; &nbsp; &nbsp; &nbsp;
+   <img width="45%" alt="tank_002" src="https://github.com/user-attachments/assets/510d4fee-4503-4a7e-b94a-d8eb87cec2e2" />
+</p>
 
-<img width="360" height="270" alt="tank_010" src="https://github.com/user-attachments/assets/0101ec07-68e8-419f-ba03-0792d0dc4bdb" />
 
-<img width="360" height="270" alt="tank_009" src="https://github.com/user-attachments/assets/d937c4b5-4391-4dab-a69e-708c888d22df" />
 
-<img width="360" height="270" alt="tank_008" src="https://github.com/user-attachments/assets/8e9a2925-6faa-4342-8f31-df0e09a46ba1" />
+<p align="center">
+   <img width="45%" alt="tank_003" src="https://github.com/user-attachments/assets/439976cc-4885-4cbb-b570-38fe75ed740b" />
+      &nbsp; &nbsp; &nbsp; &nbsp;
+   <img width="45%" alt="tank_001" src="https://github.com/user-attachments/assets/cb80e0ed-2f23-49bb-b37d-f9058db3c896" />
+</p>
 
-<img width="360" height="270" alt="tank_007" src="https://github.com/user-attachments/assets/94515844-91db-4636-aded-1246cd7b580f" />
 
-<img width="360" height="270" alt="tank_006" src="https://github.com/user-attachments/assets/c1ca1496-531e-41d4-8b2c-ad16261478a0" />
+<p align="center">
+   
+<img width="45%" alt="tank_004" src="https://github.com/user-attachments/assets/b473be35-b2e6-408a-a1be-c19b44c4e61d" />
+      &nbsp; &nbsp; &nbsp; &nbsp;
+      
+<img width="45%" alt="tank_005" src="https://github.com/user-attachments/assets/2f177021-e57a-409c-a4d5-1f20b95263a4" />
+</p>
 
-<img width="360" height="270" alt="tank_005" src="https://github.com/user-attachments/assets/2f177021-e57a-409c-a4d5-1f20b95263a4" />
 
-<img width="360" height="270" alt="tank_004" src="https://github.com/user-attachments/assets/b473be35-b2e6-408a-a1be-c19b44c4e61d" />
+<p align="center">
+<img width="45%" alt="tank_006" src="https://github.com/user-attachments/assets/c1ca1496-531e-41d4-8b2c-ad16261478a0" />
+      &nbsp; &nbsp; &nbsp; &nbsp;
+   
+<img width="45%" alt="tank_007" src="https://github.com/user-attachments/assets/94515844-91db-4636-aded-1246cd7b580f" />
+</p>
 
-<img width="360" height="270" alt="tank_003" src="https://github.com/user-attachments/assets/439976cc-4885-4cbb-b570-38fe75ed740b" />
 
-<img width="360" height="270" alt="tank_002" src="https://github.com/user-attachments/assets/510d4fee-4503-4a7e-b94a-d8eb87cec2e2" />
+<p align="center">
+<img width="45%" alt="tank_008" src="https://github.com/user-attachments/assets/8e9a2925-6faa-4342-8f31-df0e09a46ba1" />
+      &nbsp; &nbsp; &nbsp; &nbsp;
+   
+<img width="45%" alt="tank_009" src="https://github.com/user-attachments/assets/d937c4b5-4391-4dab-a69e-708c888d22df" />
+</p>
 
-<img width="360" height="270" alt="tank_001" src="https://github.com/user-attachments/assets/cb80e0ed-2f23-49bb-b37d-f9058db3c896" />
+
 
 
 
